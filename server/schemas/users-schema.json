@@ -1,3 +1,68 @@
 {
-
+  "addUser": {
+    "id": "AddUser",
+    "type": "object",
+    "properties": {
+      "username": {
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
+      },
+      "password": {"type": "string"},
+      "email": {"type": "string"},
+      "name": {"type": "string"},
+      "surname": {"type": "string"}
+    },
+    "required": ["username", "password", "email", "name", "surname"],
+    "maxProperties": 5
+  },
+  "loginUser": {
+    "id": "LogInService",
+    "type": "object",
+    "properties": {
+      "username": {"type": "string"},
+      "password": {"type": "string"}
+    },
+    "required": ["username", "password"],
+    "maxProperties": 2
+  },
+  "forgotPassword": {
+    "id": "ForgotPassword",
+    "type": "object",
+    "properties": {
+      "email": {"type": "string"}
+    },
+    "required": ["email"],
+    "maxProperties": 1
+  },
+  "resetPassword": {
+    "id": "ResetPassword",
+    "type": "object",
+    "properties": {
+      "newPassword": {"type": "string"}
+    },
+    "required": ["newPassword"],
+    "maxProperties": 1
+  },
+  "changePassword": {
+    "id": "ChangePassword",
+    "type": "object",
+    "properties": {
+      "email": {"type": "string"},
+      "oldPassword": {"type": "string"},
+      "newPassword": {"type": "string"}
+    },
+    "required": ["newPassword", "oldPassword", "email"],
+    "maxProperties": 3
+  },
+  "updateUser": {
+    "id": "UpdateUser",
+    "type": "object",
+    "properties": {
+      "location": {"type": "string"},
+      "email": {"type": "string"},
+      "hobby": {"type": "string"}
+    },
+    "required": ["location", "email", "hobby"],
+    "maxProperties": 3
+  }
 }

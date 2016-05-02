@@ -17,9 +17,17 @@ var server = require('http').createServer(app);
 require('./config/express')(app);
 require('./routes')(app);
 
+process.on('unhandledRejection', function (reason, p) {
+    console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason);
+});
+
+process.on('unhandledException', function (err) {
+    console.log('Possibly Unhandled Exception at: Promise ', err);
+});
+
 // Start server
 server.listen(config.port, config.ip, function () {
-  console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
+    console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
 });
 
 // Expose app

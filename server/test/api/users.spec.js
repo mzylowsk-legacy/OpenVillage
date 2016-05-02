@@ -1,26 +1,38 @@
 'use strict';
 
 var expect = require('expect.js'),
-  sinon = require('sinon'),
-  rewire = require('rewire'),
-  //usersApi = rewire('../../api/users'),
-  httpStatuses = require('../../components/http-statuses');
+    sinon = require('sinon'),
+    rewire = require('rewire'),
+    usersApi = rewire('../../api/users'),
+    Q = require('q'),
+    httpStatuses = require('../../components/http-statuses');
 
-describe('API users', function() {
+describe('API users', function () {
 
-  var usersEntitiesMock, callback, error;
-  beforeEach(function() {
-    callback = sinon.spy();
-    error = {};
-  });
-
-  describe('API users 1', function() {
-
-    it('test 1', function(done) {
-      expect(1).to.equal(1);
-
-      done();
+    var usersEntitiesMock, tokenEntitiesMock, options, callback, error, user;
+    beforeEach(function () {
+        callback = sinon.spy();
+        error = 'error';
+        options = {
+            username: 'username',
+            email: 'email'
+        };
+        user = {};
+        usersEntitiesMock = {};
+        tokenEntitiesMock = {};
     });
-  });
+
+    describe('API addUser', function () {
+
+        it('should not add user if something wrong', function (done) {
+            // prepare
+
+            // execute
+
+            // attest
+
+            done();
+        });
+    });
 
 });
