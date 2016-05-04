@@ -50,7 +50,7 @@ var addUser = function (newUser, callback) {
             callback(null, httpStatuses.Users.Created);
         })
         .catch(function (err) {
-            logger.error('Error: ' + JSON.stringify(err));
+            logger.error('Error: ' + utils.translateError(err));
             if (err.status !== httpStatuses.Users.AlreadyExists.status) {
                 logger.debug('Cleaning steps done before error had been thrown.');
                 userEntities.deleteUserByEmail(newUser.email);
@@ -91,7 +91,7 @@ var activateUser = function (options, callback) {
             callback(null, httpStatuses.Users.Activated);
         })
         .catch(function (err) {
-            logger.error('Error: ' + JSON.stringify(err));
+            logger.error('Error: ' + utils.translateError(err));
             callback(err, null);
         });
 };
@@ -99,6 +99,7 @@ var activateUser = function (options, callback) {
 var logInUser = function (options, callback) {
     userEntities.findUserByUsername(options.username)
         .then(function (user) {
+            console.log('bbbbb');
             if (user) {
                 logger.debug('User ' + options.username + ' has been found in database.');
                 if (utils.verifyPasswordHash(options.password, user.password)) {
@@ -117,7 +118,7 @@ var logInUser = function (options, callback) {
             }
         })
         .catch(function (err) {
-            logger.error('Error: ' + JSON.stringify(err));
+            logger.error('Error: ' + utils.translateError(err));
             callback(err, null);
         });
 };
@@ -147,7 +148,7 @@ var forgotPassword = function (options, callback) {
             callback(null, httpStatuses.Users.ResetPasswordTokenSent);
         })
         .catch(function (err) {
-            logger.error('Error: ' + JSON.stringify(err));
+            logger.error('Error: ' + utils.translateError(err));
             callback(err, null);
         });
 };
@@ -179,7 +180,7 @@ var resetPassword = function (options, callback) {
             callback(null, httpStatuses.Users.PasswordChanged);
         })
         .catch(function (err) {
-            logger.error('Error: ' + JSON.stringify(err));
+            logger.error('Error: ' + utils.translateError(err));
             callback(err, null);
         });
 };

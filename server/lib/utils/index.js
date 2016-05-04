@@ -13,9 +13,9 @@ module.exports.sendEmail = function (email, subject, content) {
         subject: '[OpenVillage] ' + subject,
         text: content
     };
-    return Q.Promise(function(resolve, reject) {
+    return Q.Promise(function (resolve, reject) {
         mailer.sendMail(mailOptions, function (err) {
-            if(!err) {
+            if (!err) {
                 resolve();
             } else {
                 reject(err);
@@ -25,7 +25,7 @@ module.exports.sendEmail = function (email, subject, content) {
 };
 
 module.exports.generateUserToken = function (username) {
-    return jwt.sign({ username: username }, config.auth.key, { expiresIn: config.auth.expirationTokenTime });
+    return jwt.sign({username: username}, config.auth.key, {expiresIn: config.auth.expirationTokenTime});
 };
 
 module.exports.hashPassword = function (password) {
@@ -34,4 +34,21 @@ module.exports.hashPassword = function (password) {
 
 module.exports.verifyPasswordHash = function (hash, password) {
     return bcrypt.compareSync(hash, password);
+};
+
+module.exports.translateError = function (err) {
+    if ('status' in err) {
+        return JSON.stringify(err);
+    } else if (Array.isArray(err) || typeof(err) === 'string') {
+        return JSON.stringify({
+            status: 500,
+            message: err
+        });
+    } else {
+        return JSON.stringify({
+            status: 500,
+            message: String(err),
+            stringified: JSON.stringify(err)
+        });
+    }
 };
