@@ -36,8 +36,8 @@ describe('HANDLER users', function () {
                 username: 'username',
                 password: 'password',
                 email: 'email',
-                name: 'name',
-                surname: 'surname'
+                fullname: 'name',
+                birthdate: 'surname'
             };
             // execute
             usersHandler.addUser(reqMock, resMock);
@@ -56,8 +56,8 @@ describe('HANDLER users', function () {
                 username: 'username',
                 password: 'password',
                 email: 'email',
-                name: 'name',
-                surname: 'surname'
+                fullname: 'name',
+                birthdate: 'surname'
             };
             // execute
             usersHandler.addUser(reqMock, resMock);

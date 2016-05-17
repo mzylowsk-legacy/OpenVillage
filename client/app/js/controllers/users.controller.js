@@ -13,4 +13,26 @@ angular.module('ProjectsBuilderPlatformApp')
                 });
         };
 
+        $scope.register = function (user) {
+            usersService.register(user)
+                .then(function () {
+                    $scope.submitted = true;
+                    $scope.info = 'User has been created. Check your email address.';
+                }, function (err) {
+                    $scope.submitted = true;
+                    $scope.info = err;
+                });
+        };
+
+        $scope.forgotPassword = function (email) {
+            usersService.forgotPassword(email)
+                .then(function () {
+                    $scope.submitted = true;
+                    $scope.info = 'Reset password token has been sent.';
+                }, function (err) {
+                    $scope.submitted = true;
+                    $scope.info = err;
+                });
+        };
+
     });

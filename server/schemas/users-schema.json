@@ -9,10 +9,10 @@
       },
       "password": {"type": "string"},
       "email": {"type": "string"},
-      "name": {"type": "string"},
-      "surname": {"type": "string"}
+      "fullname": {"type": "string"},
+      "birthdate": {"type": "string"}
     },
-    "required": ["username", "password", "email", "name", "surname"],
+    "required": ["username", "password", "email", "fullname", "birthdate"],
     "maxProperties": 5
   },
   "loginUser": {

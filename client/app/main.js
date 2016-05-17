@@ -7,6 +7,16 @@ angular.module('ProjectsBuilderPlatformApp')
                 templateUrl: 'app/views/login.html',
                 controller: 'UsersCtrl',
                 authentication: false
+            })
+            .when('/registration', {
+                templateUrl: 'app/views/registration.html',
+                controller: 'UsersCtrl',
+                authentication: false
+            })
+            .when('/reset', {
+                templateUrl: 'app/views/reset-password.html',
+                controller: 'UsersCtrl',
+                authentication: false
             });
     })
     .run(function ($rootScope, $window, $location) {

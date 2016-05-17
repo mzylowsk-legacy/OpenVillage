@@ -80,3 +80,16 @@ form[role=login] > button {
     margin-bottom: 20px;
     color: #000011;
 }
+
+*[role="register"] {
+    max-width: 530px;
+    padding: 15px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+*[role="register"] h2 {
+    margin-left: 5em;
+    margin-bottom: 1em;
+}
