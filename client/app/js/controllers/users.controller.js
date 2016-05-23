@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ProjectsBuilderPlatformApp')
-    .controller('UsersCtrl', function ($scope, usersService, $window) {
+    .controller('UsersCtrl', function ($scope, usersService, $window, $routeParams) {
 
         $scope.logIn = function (username, password) {
             usersService.logIn(username, password)
@@ -30,6 +30,17 @@ angular.module('ProjectsBuilderPlatformApp')
                     $scope.submitted = true;
                     $scope.info = 'Reset password token has been sent.';
                 }, function (err) {
+                    $scope.submitted = true;
+                    $scope.info = err;
+                });
+        };
+
+        $scope.resetPassword = function(newPassword) {
+            usersService.resetPasswordRequest(newPassword, $routeParams.username, $routeParams.token)
+                .then(function() {
+                    $scope.submitted = true;
+                    $scope.info = 'Password has been changed.';
+                }, function(err) {
                     $scope.submitted = true;
                     $scope.info = err;
                 });

@@ -165,8 +165,8 @@ var resetPassword = function (options, callback) {
         })
         .then(function (tokenResult) {
             if (tokenResult && tokenResult.token === options.token) {
-                logger.debug('Reset token for ' + options.email + ' user has been verified.');
-                return userEntities.setNewPasswordForUsername(options.username, utils.hashPassword(options.password));
+                logger.debug('Reset token for ' + options.username + ' user has been verified.');
+                return userEntities.setNewPasswordForUsername(options.username, utils.hashPassword(options.newPassword));
             } else {
                 throwError(httpStatuses.Auth.InvalidToken);
             }

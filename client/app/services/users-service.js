@@ -46,4 +46,19 @@ angular.module('ProjectsBuilderPlatformApp')
             });
         };
 
+        this.resetPasswordRequest = function(newPassword, mail, hash) {
+            var body = {
+                newPassword: newPassword
+            };
+            return $q(function(resolve, reject) {
+                $http.post('/api/users/reset_password/' + mail + '/' + hash, body)
+                    .success(function(data) {
+                        resolve(data);
+                    })
+                    .error(function(err) {
+                        reject(err);
+                    });
+            });
+        };
+
     });

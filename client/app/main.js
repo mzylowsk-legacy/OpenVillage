@@ -13,7 +13,22 @@ angular.module('ProjectsBuilderPlatformApp')
                 controller: 'UsersCtrl',
                 authentication: false
             })
-            .when('/reset', {
+            .when('/activated', {
+                templateUrl: 'app/views/activation-success.html',
+                controller: 'UsersCtrl',
+                authentication: false
+            })
+            .when('/activation_error', {
+                templateUrl: 'app/views/activation-error.html',
+                controller: 'UsersCtrl',
+                authentication: false
+            })
+            .when('/forgot', {
+                templateUrl: 'app/views/forgot-password.html',
+                controller: 'UsersCtrl',
+                authentication: false
+            })
+            .when('/users/:username/resetPassword/:token', {
                 templateUrl: 'app/views/reset-password.html',
                 controller: 'UsersCtrl',
                 authentication: false
