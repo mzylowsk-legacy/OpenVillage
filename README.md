@@ -12,7 +12,8 @@ Software for building and testing projects.
   * ```sudo npm -g install bower```
   * ```bower install```
   * ```npm install```
-* Build project using ```grunt``` command. If everything is good, you can use this software or develop it.
+* Build project using ```grunt``` command. 
+* Install other necessary dependencies using `prepare_environment.sh` script. If everything is good, you can use this software or develop it.
 
 ### Development
 For running:
