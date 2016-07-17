@@ -1,4 +1,4 @@
-# ProjectsBuilderPlatform
+# OpenVillage
 Software for building and testing projects.
 
 ### Prerequisites
@@ -6,7 +6,7 @@ Software for building and testing projects.
 ``` sudo apt-get install mongodb nodejs npm mongodb-server mongodb-clients ```.
 * Run mongo service using ```mongod```.
 * Run ```node -v ```. If you can see version of this component, you can go to the next step, else you should run ```sudo ln -s /usr/bin/nodejs /usr/sbin/node``` command.
-* Clone project repository: ``` git clone https://github.com/GroupProjectWETI/ProjectsBuilderPlatform.git ``` (https access) or ```git clone git@github.com:GroupProjectWETI/ProjectsBuilderPlatform.git``` (ssh access).
+* Clone project repository: ``` git clone https://github.com/GroupProjectWETI/OpenVillage.git ``` (https access) or ```git clone git@github.com:GroupProjectWETI/OpenVillage.git``` (ssh access).
 * Enter into projects catalog and run following commnands:
   * ```npm -g install grunt-cli```
   * ```sudo npm -g install bower```
