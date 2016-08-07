@@ -13,11 +13,6 @@
         "client/app/app.ts",
         "client/app/main/main.controller.ts",
         "client/app/main/main.ts",
-        "client/components/footer/footer.directive.ts",
-        "client/components/navbar/navbar.controller.ts",
-        "client/components/navbar/navbar.directive.ts",
-        "client/components/util/util.module.ts",
-        "client/components/util/util.service.ts",
         "typings/main.d.ts"
         ]
 }
