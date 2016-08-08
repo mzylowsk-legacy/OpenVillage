@@ -17,6 +17,7 @@
     "composable-middleware": "^0.3.0",
     "jsonschema": "1.0.1",
     "mongoskin": "1.4.13",
+    "mongodb": "1.4.4",
     "log4js": "0.6.26",
     "bcrypt": "0.8.6",
     "nodemailer": "1.4.0",
