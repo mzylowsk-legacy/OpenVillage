@@ -1,0 +1,16 @@
+---
+- name: download nodejs
+  shell: "curl -sSL https://deb.nodesource.com/setup_4.x | sudo -E bash -"
+
+- name: install nodejs using apt
+  apt: name={{ item }} state=present
+  become: yes
+  with_items:
+    - nodejs
+
+- name: install npm packages
+  npm: name={{ item }} global=yes state=latest
+  with_items:
+    - grunt-cli
+    - bower
+
