@@ -3,9 +3,11 @@
 angular.module('openvillage')
     .service('usersService', function ($http, $q) {
 
+        var SERVER_URL = 'http://localhost:8080';
+
         this.register = function (newUser) {
             return $q(function (resolve, reject) {
-                $http.post('http://localhost:8080/api/users/add', newUser)
+                $http.post(SERVER_URL + '/api/users/add', newUser)
                     .success(function (data) {
                         resolve(data);
                     })
@@ -21,7 +23,7 @@ angular.module('openvillage')
                 password: password
             };
             return $q(function (resolve, reject) {
-                $http.post('http://localhost:8080/api/users/login', body)
+                $http.post(SERVER_URL + '/api/users/login', body)
                     .success(function (data) {
                         resolve(data);
                     })
@@ -36,7 +38,7 @@ angular.module('openvillage')
                 email: email
             };
             return $q(function (resolve, reject) {
-                $http.post('http://localhost:8080/api/users/forgot_password', body)
+                $http.post(SERVER_URL + '/api/users/forgot_password', body)
                     .success(function (data) {
                         resolve(data);
                     })
@@ -51,7 +53,7 @@ angular.module('openvillage')
                 newPassword: newPassword
             };
             return $q(function(resolve, reject) {
-                $http.post('http://localhost:8080/api/users/reset_password/' + mail + '/' + hash, body)
+                $http.post(SERVER_URL + '/api/users/reset_password/' + mail + '/' + hash, body)
                     .success(function(data) {
                         resolve(data);
                     })
