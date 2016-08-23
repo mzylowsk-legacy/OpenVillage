@@ -97,7 +97,7 @@ describe('HANDLER users', function () {
             usersHandler.activateUser(reqMock, resMock);
             // attest
             expect(resMock.redirect.calledOnce).to.equal(true);
-            expect(resMock.redirect.calledWith('/activated')).to.equal(true);
+            expect(resMock.redirect.calledWith('/activation-success')).to.equal(true);
 
             done();
         });
@@ -110,7 +110,7 @@ describe('HANDLER users', function () {
             usersHandler.activateUser(reqMock, resMock);
             // attest
             expect(resMock.redirect.calledOnce).to.equal(true);
-            expect(resMock.redirect.calledWith('/activation_error')).to.equal(true);
+            expect(resMock.redirect.calledWith('/activation-error')).to.equal(true);
 
             done();
         });
