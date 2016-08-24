@@ -100,3 +100,15 @@ module.exports.setNewPasswordForEmail = function (email, newPassword) {
         });
     });
 };
+
+module.exports.getUserProfile = function (username) {
+    return Q.Promise(function (resolve, reject) {
+        db.users.findOne({username: username}, function(err, result) {
+            if(!err) {
+                resolve(result);
+            } else {
+                reject(err);
+            }
+        });
+    });
+};

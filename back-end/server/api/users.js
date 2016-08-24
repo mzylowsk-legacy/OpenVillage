@@ -99,7 +99,6 @@ var activateUser = function (options, callback) {
 var logInUser = function (options, callback) {
     userEntities.findUserByUsername(options.username)
         .then(function (user) {
-            console.log('bbbbb');
             if (user) {
                 logger.debug('User ' + options.username + ' has been found in database.');
                 if (utils.verifyPasswordHash(options.password, user.password)) {
@@ -185,10 +184,25 @@ var resetPassword = function (options, callback) {
         });
 };
 
+var getUserProfile = function (username, callback) {
+    userEntities.getUserProfile(username)
+        .then(function (user) {
+            delete user.password;
+            delete user._id;
+            delete user.activated;
+            callback(null, user);
+        })
+        .catch(function (err) {
+            logger.error('Error: ' + utils.translateError(err));
+            callback(err, null);
+        });
+};
+
 module.exports = {
     addUser: addUser,
     activateUser: activateUser,
     logInUser: logInUser,
     forgotPassword: forgotPassword,
-    resetPassword: resetPassword
+    resetPassword: resetPassword,
+    getUserProfile: getUserProfile
 };
