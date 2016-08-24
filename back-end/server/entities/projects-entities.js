@@ -40,3 +40,15 @@ module.exports.deleteProjectByNameAndOwner = function (name, owner) {
         });
     });
 };
+
+module.exports.findProjectsByOwner = function (owner) {
+    return Q.Promise(function (resolve, reject) {
+        db.projects.find({owner: owner}).toArray(function(err, result) {
+            if (!err) {
+                resolve(result);
+            } else {
+                reject(err);
+            }
+        });
+    });
+};

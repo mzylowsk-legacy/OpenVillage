@@ -56,7 +56,22 @@ var deleteProject = function (name, owner) {
     });
 };
 
+var getProjects = function (owner) {
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.findProjectsByOwner(owner)
+            .then(function (projects) {
+                logger.debug('Projects for ' + owner + ' listed.');
+                resolve(projects);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
 module.exports = {
     addNewProject: addNewProject,
-    deleteProject: deleteProject
+    deleteProject: deleteProject,
+    getProjects: getProjects
 };
