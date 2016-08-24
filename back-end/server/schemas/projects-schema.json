@@ -1,0 +1,32 @@
+{
+  "addNewProject": {
+    "id": "AddNewProject",
+    "type": "object",
+    "properties": {
+      "username": {
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
+      },
+      "password": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "url": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "username",
+      "password",
+      "description",
+      "url",
+      "name"
+    ],
+    "maxProperties": 5
+  }
+}
