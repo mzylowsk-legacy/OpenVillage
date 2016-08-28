@@ -6,11 +6,14 @@
 
 (function () {
     angular.module('openvillage', [
-            'ui.router',                    // Routing
-            'ui.bootstrap'                 // Bootstrap
-        ])
-        .config(function ($locationProvider) {
-            $locationProvider.html5Mode(true);
-        });
+            'ui.router',        // Routing
+            'ui.bootstrap',     // Bootstrap
+            'ui.router.login'   // Login module
+        ]);
+
+    angular.module('openvillage')
+        .config(function ($httpProvider) {
+            $httpProvider.interceptors.push('authInterceptor');
+    });
 
 })();

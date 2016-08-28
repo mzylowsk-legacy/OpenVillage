@@ -14,6 +14,13 @@ angular.module('openvillage')
                 });
         };
 
+        $scope.logOut = function() {
+            if($window.sessionStorage.token) {
+                delete $window.sessionStorage.token;
+                $state.go('login');
+            }
+        };
+
         $scope.register = function (user) {
             usersService.register(user)
                 .then(function () {

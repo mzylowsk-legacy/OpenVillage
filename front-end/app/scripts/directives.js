@@ -29,6 +29,26 @@ function pageTitle($rootScope, $timeout) {
 }
 
 /**
+ * logoutUser - Directive for set logout method on click Logout link in top-navbar.
+ */
+function logoutUser($window, $state) {
+    return {
+        link: function(scope, element) {
+            var listener = function() {
+                if($window.sessionStorage.token) {
+                    delete $window.sessionStorage.token;
+                }
+                if($window.sessionStorage.sessionUsername) {
+                    delete $window.sessionStorage.sessionUsername;
+                }
+                $state.go('login');
+            };
+            element.on('click', listener);
+        }
+    };
+}
+
+/**
  * sideNavigation - Directive for run metsiMenu on sidebar navigation
  */
 function sideNavigation($timeout) {
@@ -160,6 +180,7 @@ function iboxToolsFullScreen($timeout) {
 angular
     .module('openvillage')
     .directive('pageTitle', pageTitle)
+    .directive('logoutUser', logoutUser)
     .directive('sideNavigation', sideNavigation)
     .directive('iboxTools', iboxTools)
     .directive('minimalizaSidebar', minimalizaSidebar)
