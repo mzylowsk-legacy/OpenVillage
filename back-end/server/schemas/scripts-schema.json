@@ -1,0 +1,18 @@
+{
+  "addNewScript": {
+    "id": "AddNewScript",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
+      },
+      "code": { "type": "string" }
+    },
+    "required": [
+      "name",
+      "code"
+    ],
+    "maxProperties": 2
+  }
+}

@@ -5,7 +5,9 @@ var userEntities = require('../entities/users-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
-    utils = require('../lib/utils');
+    securityTools = require('../lib/utils/security-tools'),
+    mailTools = require('../lib/utils/mailer-tools'),
+    utils = require('../lib/utils/others');
 
 var throwError = function (message) {
     logger.debug(message);
@@ -13,7 +15,7 @@ var throwError = function (message) {
 };
 
 var addUser = function (newUser, callback) {
-    var activationToken = utils.generateUserToken(newUser.username);
+    var activationToken = securityTools.generateUserToken(newUser.username);
     userEntities.findUserByEmail(newUser.email)
         .then(function (user) {
             if (!user) {
@@ -26,7 +28,7 @@ var addUser = function (newUser, callback) {
         .then(function (user) {
             if (!user) {
                 logger.debug('New user ' + newUser.username + ' not found by username in database.');
-                newUser.password = utils.hashPassword(newUser.password);
+                newUser.password = securityTools.hashPassword(newUser.password);
                 newUser.activated = false;
                 newUser.created = Date.now();
                 return userEntities.addUser(newUser);
@@ -40,7 +42,7 @@ var addUser = function (newUser, callback) {
         })
         .then(function () {
             logger.debug('Activation token for ' + newUser.username + ' user has been added to database.');
-            return utils.sendEmail(
+            return mailTools.sendEmail(
                 newUser.email,
                 constants.email.types.accountActivation.subject,
                 constants.email.types.accountActivation.content(newUser.username, activationToken));
@@ -101,11 +103,11 @@ var logInUser = function (options, callback) {
         .then(function (user) {
             if (user) {
                 logger.debug('User ' + options.username + ' has been found in database.');
-                if (utils.verifyPasswordHash(options.password, user.password)) {
+                if (securityTools.verifyPasswordHash(options.password, user.password)) {
                     logger.debug('Password for user ' + options.username + ' has been found verified.');
                     if (user.activated) {
                         logger.debug('User authorized: Token send.');
-                        callback(null, {token: utils.generateUserToken(user.username)});
+                        callback(null, {token: securityTools.generateUserToken(user.username)});
                     } else {
                         throwError(httpStatuses.Users.NotActivated);
                     }
@@ -123,7 +125,7 @@ var logInUser = function (options, callback) {
 };
 
 var forgotPassword = function (options, callback) {
-    var resetPasswordToken = utils.generateUserToken(options.email);
+    var resetPasswordToken = securityTools.generateUserToken(options.email);
     var userEntity = {};
     userEntities.findUserByEmail(options.email)
         .then(function (user) {
@@ -137,7 +139,7 @@ var forgotPassword = function (options, callback) {
         })
         .then(function () {
             logger.debug('Token for ' + options.email + ' has been added to database.');
-            return utils.sendEmail(
+            return mailTools.sendEmail(
                 options.email,
                 constants.email.types.resetPassword.subject,
                 constants.email.types.resetPassword.content(userEntity.username, resetPasswordToken));
@@ -165,7 +167,7 @@ var resetPassword = function (options, callback) {
         .then(function (tokenResult) {
             if (tokenResult && tokenResult.token === options.token) {
                 logger.debug('Reset token for ' + options.username + ' user has been verified.');
-                return userEntities.setNewPasswordForUsername(options.username, utils.hashPassword(options.newPassword));
+                return userEntities.setNewPasswordForUsername(options.username, securityTools.hashPassword(options.newPassword));
             } else {
                 throwError(httpStatuses.Auth.InvalidToken);
             }

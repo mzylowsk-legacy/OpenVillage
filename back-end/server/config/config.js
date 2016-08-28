@@ -22,3 +22,7 @@ module.exports.auth = {
 module.exports.environment = {
     host: '<protocol>:<address>:<port>'
 };
+
+module.exports.builder = {
+    workspace: { path: '/tmp/openvillage/' }
+};

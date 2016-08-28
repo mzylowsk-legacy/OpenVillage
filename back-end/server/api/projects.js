@@ -4,7 +4,7 @@ var projectsEntities = require('../entities/projects-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
-    utils = require('../lib/utils'),
+    utils = require('../lib/utils/others'),
     Q = require('q');
 
 var throwError = function (message) {

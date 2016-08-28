@@ -21,6 +21,7 @@ module.exports = function (app) {
     app.use('/auth/api/', expressJwt({secret: config.auth.key}));
     app.use('/auth/api/users', require('./handlers/authorized/users'));
     app.use('/auth/api/projects', require('./handlers/authorized/projects'));
+    app.use('/auth/api/scripts', require('./handlers/authorized/scripts'));
 
     // All other routes should redirect to the index.html
     app.route('/*')

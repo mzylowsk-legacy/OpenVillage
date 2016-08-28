@@ -32,11 +32,18 @@ var projects = {
     //errors
     AlreadyExists: {status: 409, group: 'Projects', ID: 'AlreadyExists'},
     NotExists: {status: 404, group: 'Projects', ID: 'NotExists'}
-}
+};
+
+var scripts = {
+    //success
+    Created: {status: 201, group: 'Scripts', ID: "Created"},
+    Removed: {status: 204, group: 'Scripts', ID: "Removed"}
+};
 
 module.exports = {
     Generic: generic,
     Auth: auth,
     Users: users,
-    Projects: projects
+    Projects: projects,
+    Scripts: scripts
 };
