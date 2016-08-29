@@ -4,7 +4,8 @@ var expect = require('expect.js'),
     sinon = require('sinon'),
     rewire = require('rewire'),
     httpStatuses = require('../../components/http-statuses'),
-    usersHandler = rewire('../../handlers/users/users.controller');
+    usersHandler = rewire('../../handlers/users/users.controller'),
+    config = require('../../config/config');
 
 describe('HANDLER users', function () {
 
@@ -97,7 +98,7 @@ describe('HANDLER users', function () {
             usersHandler.activateUser(reqMock, resMock);
             // attest
             expect(resMock.redirect.calledOnce).to.equal(true);
-            expect(resMock.redirect.calledWith('/activation-success')).to.equal(true);
+            expect(resMock.redirect.calledWith(config.environment.host + '/#/activation-success')).to.equal(true);
 
             done();
         });
@@ -110,7 +111,7 @@ describe('HANDLER users', function () {
             usersHandler.activateUser(reqMock, resMock);
             // attest
             expect(resMock.redirect.calledOnce).to.equal(true);
-            expect(resMock.redirect.calledWith('/activation-error')).to.equal(true);
+            expect(resMock.redirect.calledWith(config.environment.host + '/#/activation-error')).to.equal(true);
 
             done();
         });

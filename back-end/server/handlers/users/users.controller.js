@@ -4,7 +4,8 @@ var _ = require('lodash'),
     usersManager = require('../../api/users'),
     schemaValidator = require('../../lib/schema-validator'),
     userSchemas = require('.././../schemas/users-schema.json'),
-    httpStatuses = require('../../components/http-statuses');
+    httpStatuses = require('../../components/http-statuses'),
+    config = require('../../config/config');
 
 // Create a new user
 exports.addUser = function(req, res) {
@@ -25,9 +26,9 @@ exports.addUser = function(req, res) {
 exports.activateUser = function(req, res) {
     usersManager.activateUser(req.params, function(err, result) {
         if(!err && result) {
-            res.redirect('/activation-success');
+            res.redirect(config.environment.host + '/#/activation-success');
         } else {
-            res.redirect('/activation-error');
+            res.redirect(config.environment.host + '/#/activation-error');
         }
     });
 };

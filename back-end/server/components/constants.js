@@ -7,7 +7,7 @@ module.exports = {
                 subject: 'Reset password',
                 content: function(username, token) {
                     return 'Click on this link to reset your password: \n' +
-                        config.environment.host + '/users/' + username + '/resetPassword/' + token;
+                        config.environment.host + '/#/users/' + username + '/resetPassword/' + token;
                 }
             },
             accountActivation: {
