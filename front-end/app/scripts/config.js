@@ -37,6 +37,16 @@ function config($stateProvider, $urlRouterProvider, $loginProvider) {
                 saveState: false
             }
         })
+        .state('index.profile', {
+            url: '/profile',
+            templateUrl: 'views/profile.html',
+            controller: 'ProfileCtrl',
+            data: {
+                pageTitle: 'User profile',
+                requireLogin: true,
+                saveState: false
+            }
+        })
         .state('login', {
             url: '/login',
             templateUrl: 'views/login.html',

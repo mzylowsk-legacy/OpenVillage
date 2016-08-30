@@ -63,4 +63,16 @@ angular.module('openvillage')
             });
         };
 
+        this.getUserProfile = function(username) {
+            return $q(function(resolve, reject) {
+                $http.get(SERVER_URL + '/auth/api/users/' + username + '/profile')
+                    .success(function(data) {
+                        resolve(data);
+                    })
+                    .error(function(err) {
+                        reject(err);
+                    });
+            });
+        };
+
     });

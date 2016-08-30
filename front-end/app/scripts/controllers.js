@@ -16,13 +16,16 @@ function MainCtrl($scope, $window, projectsService) {
 
     this.userName = $window.sessionStorage.sessionUsername;
 
-    $scope.numberOfProjectsOwned = -1;
-    projectsService.getList()
-        .then(function (result) {
-            $scope.numberOfProjectsOwned = result.length;
-        }, function (err) {
-            console.log(err);
-        });
+    $scope.loadNumberOfProjects = function() {
+        $scope.numberOfProjectsOwned = -1;
+        projectsService.getList()
+            .then(function (result) {
+                $scope.numberOfProjectsOwned = result.length;
+            }, function (err) {
+                console.log(err);
+                window.alert(err);
+            });
+    };
 }
 
 angular
