@@ -9,10 +9,7 @@ var userEntities = require('../entities/users-entities'),
     mailTools = require('../lib/utils/mailer-tools'),
     utils = require('../lib/utils/others');
 
-var throwError = function (message) {
-    logger.debug(message);
-    throw message;
-};
+
 
 var addUser = function (newUser, callback) {
     var activationToken = securityTools.generateUserToken(newUser.username);
@@ -22,7 +19,7 @@ var addUser = function (newUser, callback) {
                 logger.debug('New user ' + newUser.username + ' not found by email in database.');
                 return userEntities.findUserByUsername(newUser.username);
             } else {
-                throwError(httpStatuses.Users.AlreadyExists);
+                utils.utils.throwError(httpStatuses.Users.AlreadyExists);
             }
         })
         .then(function (user) {
@@ -33,7 +30,7 @@ var addUser = function (newUser, callback) {
                 newUser.created = Date.now();
                 return userEntities.addUser(newUser);
             } else {
-                throwError(httpStatuses.Users.AlreadyExists);
+                utils.utils.throwError(httpStatuses.Users.AlreadyExists);
             }
         })
         .then(function () {
@@ -70,10 +67,10 @@ var activateUser = function (options, callback) {
                 if (!user.activated) {
                     return tokenEntities.findTokenByUsernameAndType(options.username, constants.token.type.activation);
                 } else {
-                    throwError(httpStatuses.Users.AlreadyActivated);
+                    utils.throwError(httpStatuses.Users.AlreadyActivated);
                 }
             } else {
-                throwError(httpStatuses.Users.NotExists);
+                utils.throwError(httpStatuses.Users.NotExists);
             }
         })
         .then(function (tokenResult) {
@@ -81,7 +78,7 @@ var activateUser = function (options, callback) {
                 logger.debug('Token delivered by ' + options.username + ' has been verified.');
                 return userEntities.activateByUsername(options.username);
             } else {
-                throwError(httpStatuses.Auth.InvalidToken);
+                utils.throwError(httpStatuses.Auth.InvalidToken);
             }
         })
         .then(function () {
@@ -109,13 +106,13 @@ var logInUser = function (options, callback) {
                         logger.debug('User authorized: Token send.');
                         callback(null, {token: securityTools.generateUserToken(user.username)});
                     } else {
-                        throwError(httpStatuses.Users.NotActivated);
+                        utils.throwError(httpStatuses.Users.NotActivated);
                     }
                 } else {
-                    throwError(httpStatuses.Auth.Unauthorized);
+                    utils.throwError(httpStatuses.Auth.Unauthorized);
                 }
             } else {
-                throwError(httpStatuses.Users.NotExists);
+                utils.throwError(httpStatuses.Users.NotExists);
             }
         })
         .catch(function (err) {
@@ -134,7 +131,7 @@ var forgotPassword = function (options, callback) {
                 userEntity = user;
                 return tokenEntities.addToken(user.username, resetPasswordToken, constants.token.type.resetPassword);
             } else {
-                throwError(httpStatuses.Users.NotExists);
+                utils.throwError(httpStatuses.Users.NotExists);
             }
         })
         .then(function () {
@@ -161,7 +158,7 @@ var resetPassword = function (options, callback) {
                 logger.debug('User ' + options.username + ' has been found in database.');
                 return tokenEntities.findTokenByUsernameAndType(options.username, constants.token.type.resetPassword);
             } else {
-                throwError(httpStatuses.Users.NotExists);
+                utils.throwError(httpStatuses.Users.NotExists);
             }
         })
         .then(function (tokenResult) {
@@ -169,7 +166,7 @@ var resetPassword = function (options, callback) {
                 logger.debug('Reset token for ' + options.username + ' user has been verified.');
                 return userEntities.setNewPasswordForUsername(options.username, securityTools.hashPassword(options.newPassword));
             } else {
-                throwError(httpStatuses.Auth.InvalidToken);
+                utils.throwError(httpStatuses.Auth.InvalidToken);
             }
         })
         .then(function () {

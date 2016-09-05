@@ -24,5 +24,8 @@ module.exports = {
             activation: 'activation',
             resetPassword: 'reset_password'
         }
+    },
+    builder: {
+        uberScriptPath: process.cwd() +'/server/lib/utils/scripts-tools/uberScript.sh'
     }
 };

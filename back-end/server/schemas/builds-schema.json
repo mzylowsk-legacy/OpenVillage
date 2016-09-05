@@ -1,0 +1,39 @@
+{
+  "runBuild": {
+    "id": "runBuild",
+    "type": "object",
+    "properties": {
+      "projectVersion": {
+        "type": "string"
+      },
+      "projectName": {
+        "type": "string"
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "scriptsName": {
+              "type": "string"
+            },
+            "args": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "scriptsName",
+            "args"
+          ],
+          "maxProperties": 2
+        }
+      }
+    },
+    "required": [
+      "projectName",
+      "projectVersion",
+      "steps"
+    ],
+    "maxProperties": 3
+  }
+}

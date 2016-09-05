@@ -7,11 +7,6 @@ var projectsEntities = require('../entities/projects-entities'),
     utils = require('../lib/utils/others'),
     Q = require('q');
 
-var throwError = function (message) {
-    logger.debug(message);
-    throw message;
-};
-
 var addNewProject = function (projectEntity, owner) {
     return Q.Promise(function (resolve, reject) {
         projectsEntities.findProjectByNameAndOwner(projectEntity.name, owner)
@@ -20,7 +15,7 @@ var addNewProject = function (projectEntity, owner) {
                     projectEntity.owner = owner;
                     return projectsEntities.addProject(projectEntity);
                 } else {
-                    throwError(httpStatuses.Projects.AlreadyExists);
+                    utils.throwError(httpStatuses.Projects.AlreadyExists);
                 }
             })
             .then(function () {
@@ -42,7 +37,7 @@ var deleteProject = function (name, owner) {
                     logger.debug('Project ' + name + ' (user: ' + owner + ') has been found.');
                     return projectsEntities.deleteProjectByNameAndOwner(name, owner);
                 } else {
-                    throwError(httpStatuses.Projects.NotExists);
+                    utils.throwError(httpStatuses.Projects.NotExists);
                 }
             })
             .then(function () {
