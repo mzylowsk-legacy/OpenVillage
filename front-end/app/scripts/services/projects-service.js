@@ -17,4 +17,28 @@ angular.module('openvillage')
             });
         };
 
+        this.addNewProject = function (project) {
+            return $q(function (resolve, reject) {
+                $http.post(SERVER_URL + '/auth/api/projects/add', project)
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
+
+        this.deleteProject = function (projectName) {
+            return $q(function (resolve, reject) {
+                $http.delete(SERVER_URL + '/auth/api/projects/delete/' + projectName)
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
+
     });

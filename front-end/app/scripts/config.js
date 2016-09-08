@@ -47,6 +47,30 @@ function config($stateProvider, $urlRouterProvider, $loginProvider) {
                 saveState: false
             }
         })
+        .state('index.projects', {
+            url: '/projects',
+            templateUrl: 'views/projects.html',
+            controller: 'ProjectsCtrl',
+            data: {
+                pageTitle: 'User projects',
+                requireLogin: true,
+                saveState: false
+            }
+        })
+        .state('index.projects.new', {
+            url: '/new',
+            views: {
+              '@index':  {
+                  templateUrl: 'views/new_project.html',
+                  controller: 'ProjectsCtrl'
+              }
+            },
+            data: {
+                pageTitle: 'Create new project',
+                requireLogin: true,
+                saveState: false
+            }
+        })
         .state('login', {
             url: '/login',
             templateUrl: 'views/login.html',

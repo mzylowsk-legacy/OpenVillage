@@ -28,7 +28,14 @@
     "angular": "~1.5.0",
     "pace": "~1.0.2",
     "metisMenu": "~2.0.2",
-    "fontawesome": "~4.5.0"
+    "fontawesome": "~4.5.0",
+    "icheck2": "~1.0.2",
+    "sweetalert": "latest",
+    "angular-sweetalert": "latest",
+    "datatables.net": "latest",
+    "datatables.net-buttons": "latest",
+    "datatables.net-dt": "latest",
+    "angular-datatables": "latest"
   },
   "resolutions": {
     "jquery": "~2.1.4",

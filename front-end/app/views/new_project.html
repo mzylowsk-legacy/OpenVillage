@@ -1,0 +1,76 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Create new project</h2>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="col-lg-7 col-md-offset-3">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-title">
+                    <h5>Preparing new project</h5>
+                </div>
+
+                <div class="ibox-content">
+                    <form class="form-horizontal" role="form" ng-submit="addProject(project)">
+                        <p>Please fill this form to proceed next</p>
+
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <label><input icheck type="checkbox" ng-model="isPrivate" checked="checked"><i></i> Is it private repository?</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-lg-2 control-label">Username</label>
+                            <div class="col-lg-10">
+                                <input type="text" placeholder="Username" class="form-control" ng-model="project.username" ng-disabled="!isPrivate" required>
+                                <span class="help-block m-b-none">Your username to github.com if repository is private</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-lg-2 control-label">Password</label>
+                            <div class="col-lg-10">
+                                <input type="password" placeholder="Password" class="form-control" ng-model="project.password" ng-disabled="!isPrivate" required>
+                                <span class="help-block m-b-none">Your password to github.com if repository is private</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-lg-2 control-label">Description</label>
+                            <div class="col-lg-10">
+                                <textarea placeholder="Description" rows="3" class="form-control" ng-model="project.description" required></textarea>
+                                <span class="help-block m-b-none">Just simple description about this project.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-lg-2 control-label">Url</label>
+                            <div class="col-lg-10">
+                                <input type="url" placeholder="Url" class="form-control" ng-model="project.url" required>
+                                <span class="help-block m-b-none">URL to specific github.com repository</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-lg-2 control-label">Name</label>
+                            <div class="col-lg-10">
+                                <input type="text" placeholder="Name" class="form-control" ng-model="project.name" required>
+                                <span class="help-block m-b-none">Unique name of project</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-lg btn-primary" type="submit">Create</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

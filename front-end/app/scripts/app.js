@@ -8,7 +8,9 @@
     angular.module('openvillage', [
             'ui.router',        // Routing
             'ui.bootstrap',     // Bootstrap
-            'ui.router.login'   // Login module
+            'ui.router.login',   // Login module
+            'oitozero.ngSweetAlert', //ngSweetAlert
+            'datatables'
         ]);
 
     angular.module('openvillage')
