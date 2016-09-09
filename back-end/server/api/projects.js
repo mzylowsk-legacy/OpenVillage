@@ -70,8 +70,27 @@ var getProjects = function (owner) {
     });
 };
 
+var getProject = function (name, owner) {
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.findProjectByNameAndOwner(name, owner)
+            .then(function (project) {
+                if (project) {
+                    logger.debug('Project for ' + owner + ' found.');
+                    resolve(project);
+                } else {
+                    throwError(httpStatuses.Projects.NotExists);
+                }
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
 module.exports = {
     addNewProject: addNewProject,
     deleteProject: deleteProject,
-    getProjects: getProjects
+    getProjects: getProjects,
+    getProject: getProject
 };

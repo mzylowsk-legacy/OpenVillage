@@ -40,3 +40,13 @@ exports.getProjects = function (req, res) {
             res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
         });
 };
+
+exports.getProject = function (req, res) {
+    projectsManager.getProject(req.params.name, req.user.username)
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
+        });
+};
