@@ -24,5 +24,16 @@ module.exports = {
             activation: 'activation',
             resetPassword: 'reset_password'
         }
+    },
+    builder: {
+        uberScriptPath: process.cwd() +'/server/lib/utils/scripts-tools/uber_script.py'
+    },
+    mongodb: {
+        collections: {
+            Builds: 'builds',
+            Projects: 'projects',
+            Tokens: 'tokens',
+            Users: 'users'
+        }
     }
 };

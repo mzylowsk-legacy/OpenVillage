@@ -1,19 +1,19 @@
 'use strict';
 
 var generic = {
-    InternalServerError: { status: 500, message: "Internal Server Error" }
+    InternalServerError: { status: 500, message: 'Internal Server Error' }
 };
 
 var auth = {
     //errors
-    Unauthorized: {status: 401, group: "Auth", ID: "Unauthorized"},
-    PasswordEmpty: {status: 400, group: 'Auth', ID: "PasswordEmpty"},
-    InvalidToken: {status: 401, group: 'Auth', ID: "InvalidToken."}
+    Unauthorized: {status: 401, group: 'Auth', ID: 'Unauthorized'},
+    PasswordEmpty: {status: 400, group: 'Auth', ID: 'PasswordEmpty'},
+    InvalidToken: {status: 401, group: 'Auth', ID: 'InvalidToken.'}
 };
 
 var users = {
     //success
-    Created: {status: 201, group: 'Users', ID: "Created"},
+    Created: {status: 201, group: 'Users', ID: 'Created'},
     Activated: {status: 204, group: 'Users', ID: 'Activated'},
     ResetPasswordTokenSent: {status: 200, group: 'Users', ID: 'ResetPasswordTokenSent'},
     PasswordChanged: {status: 200, group: 'Users', ID: 'PasswordChanged'},
@@ -27,8 +27,8 @@ var users = {
 
 var projects = {
     //success
-    Created: {status: 201, group: 'Projects', ID: "Created"},
-    Removed: {status: 204, group: 'Projects', ID: "Removed"},
+    Created: {status: 201, group: 'Projects', ID: 'Created'},
+    Removed: {status: 204, group: 'Projects', ID: 'Removed'},
     //errors
     AlreadyExists: {status: 409, group: 'Projects', ID: 'AlreadyExists'},
     NotExists: {status: 404, group: 'Projects', ID: 'NotExists'}
@@ -36,8 +36,12 @@ var projects = {
 
 var scripts = {
     //success
-    Created: {status: 201, group: 'Scripts', ID: "Created"},
-    Removed: {status: 204, group: 'Scripts', ID: "Removed"}
+    Created: {status: 201, group: 'Scripts', ID: 'Created'},
+    Removed: {status: 204, group: 'Scripts', ID: 'Removed'}
+};
+
+var builds = {
+    Triggered: {status: 202, group: 'Builds', ID: 'Triggered'}    
 };
 
 module.exports = {
@@ -45,5 +49,6 @@ module.exports = {
     Auth: auth,
     Users: users,
     Projects: projects,
-    Scripts: scripts
+    Scripts: scripts,
+    Builds: builds
 };

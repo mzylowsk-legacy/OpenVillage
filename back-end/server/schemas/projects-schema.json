@@ -4,8 +4,7 @@
     "type": "object",
     "properties": {
       "username": {
-        "type": "string",
-        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
+        "type": "string"
       },
       "password": {
         "type": "string"
