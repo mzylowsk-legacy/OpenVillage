@@ -19,7 +19,7 @@ var addUser = function (newUser, callback) {
                 logger.debug('New user ' + newUser.username + ' not found by email in database.');
                 return userEntities.findUserByUsername(newUser.username);
             } else {
-                utils.utils.throwError(httpStatuses.Users.AlreadyExists);
+                utils.throwError(httpStatuses.Users.AlreadyExists);
             }
         })
         .then(function (user) {
@@ -30,7 +30,7 @@ var addUser = function (newUser, callback) {
                 newUser.created = Date.now();
                 return userEntities.addUser(newUser);
             } else {
-                utils.utils.throwError(httpStatuses.Users.AlreadyExists);
+                utils.throwError(httpStatuses.Users.AlreadyExists);
             }
         })
         .then(function () {
