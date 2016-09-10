@@ -77,6 +77,7 @@ def run_build_steps(workspace, project_name, build_steps_list, build_name, mongo
             continue
         print('Running step: {}'.format(command))
         try:
+            command = command.replace('\"', '')
             print(command.split())
             output = subprocess.check_output(command.split(), cwd=repo_dir)
             print(output)
@@ -117,7 +118,8 @@ def initialize_build(project_name, owner, project_version, build_steps, mongo_cl
     build_name = '{}-{}'.format(project_name, current_time)
     prerequisites_steps = [INITIAL_STEPS_NAMES['CLONE'], INITIAL_STEPS_NAMES['SET_VERSION']]
     steps = []
-    for ind, step in enumerate(prerequisites_steps + build_steps):
+    summary_steps = prerequisites_steps + build_steps if build_steps else prerequisites_steps
+    for ind, step in enumerate(summary_steps):
         steps.append(dict(
             status_code=STATUSES['WAITING'],
             log='',
@@ -154,7 +156,7 @@ def parse_args():
     parser.add_argument('-o', '--project-owner', required=False, help='Project owner')
     parser.add_argument('-n', '--project-name', required=True, help='Project name')
     parser.add_argument('-v', '--project-version', required=True, help='Project version')
-    parser.add_argument('-s', '--build-steps', required=False, nargs='+', help='Steps to execute in building process')
+    parser.add_argument('-s', '--build-steps', required=False, default=[], action='append', help='Steps to execute in building process')
     parser.add_argument('-g', '--github-url', required=True, help='Url to Github repository')
     parser.add_argument('-d', '--destination', required=True, help='Destination workdir')
     parser.add_argument('-z', '--mongo-host', required=True, help='MongoDb host')
@@ -173,6 +175,9 @@ def main():
 
     build_name = initialize_build(args.project_name, args.project_owner, args.project_version, args.build_steps,
                                   mongo_client)
+
+    if not os.path.exists(args.destination):
+        os.makedirs(args.destination)
     download_repository(args.destination, args.project_name, args.github_url, args.username, args.password, build_name,
                         mongo_client)
     set_repository_version(args.destination, args.project_name, args.project_version, build_name, mongo_client)

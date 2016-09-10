@@ -49,8 +49,8 @@ module.exports.runUnixCommand = function(command) {
 };
 
 module.exports.spawnProcess = function(command, args) {
-    if (args) {
-        spawn(command, args.split(' '));
+    if (args.length) {
+        spawn(command, args, { stdio: 'inherit' });
     } else {
         spawn(command);
     }

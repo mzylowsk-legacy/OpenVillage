@@ -23,6 +23,13 @@ module.exports.environment = {
     host: '<protocol>:<address>:<port>'
 };
 
+module.exports.mongodb = {
+    host: 'mongodb://localhost',
+    port: 27017,
+    databaseName: 'openvillage',
+    collectionName: 'builds'
+};
+
 module.exports.builder = {
-    workspace: { path: '/tmp/openvillage/' }
+    workspace: { path: '/tmp/openvillage' }
 };

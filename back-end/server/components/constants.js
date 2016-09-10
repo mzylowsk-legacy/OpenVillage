@@ -26,6 +26,6 @@ module.exports = {
         }
     },
     builder: {
-        uberScriptPath: process.cwd() +'/server/lib/utils/scripts-tools/uberScript.sh'
+        uberScriptPath: process.cwd() +'/server/lib/utils/scripts-tools/uber_script.py'
     }
 };

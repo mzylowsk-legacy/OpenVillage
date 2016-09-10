@@ -14,7 +14,7 @@
         "items": {
           "type": "object",
           "properties": {
-            "scriptsName": {
+            "scriptName": {
               "type": "string"
             },
             "args": {
@@ -22,7 +22,7 @@
             }
           },
           "required": [
-            "scriptsName",
+            "scriptName",
             "args"
           ],
           "maxProperties": 2
