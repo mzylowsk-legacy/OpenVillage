@@ -39,10 +39,11 @@ var runBuild = function (buildEntity, owner) {
 
                     if (buildEntity.steps.length) {
                         for(var i in buildEntity.steps) {
+                            var scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', buildEntity.steps[i].scriptName + '.sh');
                             if (buildEntity.steps[i].args) {
-                                addComandArg('--build-steps', '"' + buildEntity.steps[i].scriptName + ' ' + buildEntity.steps[i].args + '"', args);
+                                addComandArg('--build-steps', '"bash ' + scriptPath + ' ' + buildEntity.steps[i].args + '"', args);
                             } else {
-                                addComandArg('--build-steps', buildEntity.steps[i].scriptName, args);
+                                addComandArg('--build-steps', 'bash ' + scriptPath, args);
                             }
                         }
                     }
