@@ -30,7 +30,7 @@ var runBuild = function (buildEntity, owner) {
                     addComandArg('--mongo-host', config.mongodb.host, args);
                     addComandArg('--mongo-port', config.mongodb.port, args);
                     addComandArg('--mongo-database-name', config.mongodb.databaseName, args);
-                    addComandArg('--mongo-collection-name', config.mongodb.collectionName, args);
+                    addComandArg('--mongo-collection-name', constants.mongodb.collections.Builds, args);
 
                     if (project.username && project.password) {
                         addComandArg('--username', project.username, args);

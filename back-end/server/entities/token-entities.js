@@ -1,13 +1,15 @@
 'use strict';
 var mongo = require('mongoskin'),
+    config = require('../config/config'),
     Q = require('q'),
-    db = mongo.db("mongodb://localhost:27017/openvillage", {native_parser:true});
+    collection = require('../components/constants').mongodb.collections.Tokens,
+    db = mongo.db(config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.databaseName, {native_parser: true});
 
-db.bind('tokens');
+db.bind(collection);
 
 module.exports.addToken = function(username, token, type) {
     return Q.Promise(function (resolve, reject) {
-        db.tokens.insert({username: username, token: token, type: type}, function(err, result) {
+        db[collection].insert({username: username, token: token, type: type}, function(err, result) {
             if (!err) {
                 resolve(result);
             } else {
@@ -19,7 +21,7 @@ module.exports.addToken = function(username, token, type) {
 
 module.exports.findTokenByUsernameAndType = function(username, type) {
     return Q.Promise(function (resolve, reject) {
-        db.tokens.findOne({username: username, type: type}, function(err, result) {
+        db[collection].findOne({username: username, type: type}, function(err, result) {
             if (!err) {
                 resolve(result);
             } else {
@@ -31,7 +33,7 @@ module.exports.findTokenByUsernameAndType = function(username, type) {
 
 module.exports.deleteByUsernameAndType = function(username, type) {
     return Q.Promise(function (resolve, reject) {
-        db.tokens.remove({username: username, type: type}, function(err, result) {
+        db[collection].remove({username: username, type: type}, function(err, result) {
             if (!err) {
                 resolve(result);
             } else {

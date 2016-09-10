@@ -26,8 +26,7 @@ module.exports.environment = {
 module.exports.mongodb = {
     host: 'mongodb://localhost',
     port: 27017,
-    databaseName: 'openvillage',
-    collectionName: 'builds'
+    databaseName: 'openvillage'
 };
 
 module.exports.builder = {
