@@ -19,13 +19,17 @@
             },
             "args": {
               "type": "string"
+            },
+            "public": {
+              "type":  { "enum": [ false, true ] }
             }
           },
           "required": [
             "scriptName",
-            "args"
+            "args",
+            "public"
           ],
-          "maxProperties": 2
+          "maxProperties": 3
         }
       }
     },
