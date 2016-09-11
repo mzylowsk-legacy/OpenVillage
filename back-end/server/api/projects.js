@@ -73,7 +73,7 @@ var getProject = function (name, owner) {
                     logger.debug('Project for ' + owner + ' found.');
                     resolve(project);
                 } else {
-                    throwError(httpStatuses.Projects.NotExists);
+                    utils.throwError(httpStatuses.Projects.NotExists);
                 }
             })
             .catch(function (err) {
