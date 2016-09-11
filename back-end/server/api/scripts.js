@@ -53,6 +53,21 @@ var getAllScripts = function (owner) {
     });
 };
 
+
+var getDefaultScripts = function () {
+    return Q.Promise(function (resolve, reject) {
+        scriptsFileEntities.getDefaultScripts()
+            .then(function (scripts) {
+                logger.debug('Default scripts listed.');
+                resolve(scripts);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
 var getScriptContent = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
         scriptsFileEntities.isExistingScript(name, owner)
@@ -71,9 +86,29 @@ var getScriptContent = function (name, owner) {
     });
 };
 
+var getDefaultScriptContent = function (name) {
+    return Q.Promise(function (resolve, reject) {
+        scriptsFileEntities.isExistingDefaultScript(name)
+            .then(function () {
+                logger.debug('Script %s has been found', name);
+                return scriptsFileEntities.getDefaultScriptContent(name);
+            })
+            .then(function (content) {
+                logger.debug('Default script for has been sent.');
+                resolve(content);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
 module.exports = {
     addNewScript: addNewScript,
     deleteScript: deleteScript,
     getAllScripts: getAllScripts,
-    getScriptContent: getScriptContent
+    getDefaultScripts: getDefaultScripts,
+    getScriptContent: getScriptContent,
+    getDefaultScriptContent: getDefaultScriptContent
 };

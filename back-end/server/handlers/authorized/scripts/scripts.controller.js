@@ -41,8 +41,29 @@ exports.getAllScripts = function (req, res) {
         });
 };
 
+
+exports.getDefaultScripts = function (req, res) {
+    scriptsManager.getDefaultScripts()
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
+        });
+};
+
 exports.getScriptContent = function (req, res) {
     scriptsManager.getScriptContent(req.params.name, req.user.username)
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
+        });
+};
+
+exports.getDefaultScriptContent = function (req, res) {
+    scriptsManager.getDefaultScriptContent(req.params.name)
         .then(function (result) {
             res.send(result);
         })

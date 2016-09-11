@@ -26,7 +26,8 @@ module.exports = {
         }
     },
     builder: {
-        uberScriptPath: process.cwd() +'/server/lib/utils/scripts-tools/uber_script.py'
+        uberScriptPath: process.cwd() +'/server/lib/utils/scripts-tools/uber_script.py',
+        commonScriptsPath: process.cwd() +'/server/assets/default_scripts'
     },
     mongodb: {
         collections: {
