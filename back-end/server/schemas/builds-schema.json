@@ -4,10 +4,12 @@
     "type": "object",
     "properties": {
       "projectVersion": {
-        "type": "string"
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
       },
       "projectName": {
-        "type": "string"
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
       },
       "steps": {
         "type": "array",
@@ -15,7 +17,8 @@
           "type": "object",
           "properties": {
             "scriptName": {
-              "type": "string"
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
             },
             "args": {
               "type": "string"
