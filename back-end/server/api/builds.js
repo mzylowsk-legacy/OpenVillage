@@ -1,6 +1,7 @@
 'use strict';
 
 var projectsEntities = require('../entities/projects-entities'),
+    buildsEntities = require('../entities/builds-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
@@ -68,6 +69,41 @@ var runBuild = function (buildEntity, owner) {
     });
 };
 
+var getBuildByName = function (name, owner) {
+    return Q.Promise(function (resolve, reject) {
+        buildsEntities.findBuildByNameAndOwner(name, owner)
+            .then(function (build) {
+                if (build) {
+                    logger.debug('Build for ' + owner + ' found.');
+                    resolve(build);
+                } else {
+                    utils.throwError(httpStatuses.Builds.NotExists);
+                }
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
+
+var getBuildsByProjectName = function (projectName, owner) {
+    return Q.Promise(function (resolve, reject) {
+        buildsEntities.findBuildsByProjectNameAndOwner(projectName, owner)
+            .then(function (builds) {
+                logger.debug('Builds for %s project listed for user %s.', projectName, owner);
+                resolve(builds);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
 module.exports = {
-    runBuild: runBuild
+    runBuild: runBuild,
+    getBuildByName: getBuildByName,
+    getBuildsByProjectName: getBuildsByProjectName
 };
