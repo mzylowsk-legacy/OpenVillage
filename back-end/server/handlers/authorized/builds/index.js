@@ -7,5 +7,6 @@ var router = express.Router();
 
 router.post('/run', controller.runBuild);
 router.get('/get/:name', controller.getBuildByName);
+router.get('/project/:projectName', controller.getBuildsByProjectName);
 
 module.exports = router;

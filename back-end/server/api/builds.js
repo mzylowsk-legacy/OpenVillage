@@ -87,7 +87,23 @@ var getBuildByName = function (name, owner) {
     });
 };
 
+
+var getBuildsByProjectName = function (projectName, owner) {
+    return Q.Promise(function (resolve, reject) {
+        buildsEntities.findBuildsByProjectNameAndOwner(projectName, owner)
+            .then(function (builds) {
+                logger.debug('Builds for %s project listed for user %s.', projectName, owner);
+                resolve(builds);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
 module.exports = {
     runBuild: runBuild,
-    getBuildByName: getBuildByName
+    getBuildByName: getBuildByName,
+    getBuildsByProjectName: getBuildsByProjectName
 };

@@ -21,12 +21,13 @@ module.exports.findBuildByNameAndOwner = function (name, owner) {
 
 module.exports.findBuildsByProjectNameAndOwner = function (projectName, owner) {
     return Q.Promise(function (resolve, reject) {
-        db[collection].find({projectName: projectName, owner: owner}).toArray(function (err, result) {
-            if (!err) {
-                resolve(result);
-            } else {
-                reject(err);
-            }
-        });
+        db[collection].find({projectName: projectName, owner: owner}).sort({timestamp: -1})
+            .toArray(function (err, result) {
+                if (!err) {
+                    resolve(result);
+                } else {
+                    reject(err);
+                }
+            });
     });
 };

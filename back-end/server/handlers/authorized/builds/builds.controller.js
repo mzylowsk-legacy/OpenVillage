@@ -29,3 +29,13 @@ exports.getBuildByName = function (req, res) {
             res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
         });
 };
+
+exports.getBuildsByProjectName = function (req, res) {
+    buildsManager.getBuildsByProjectName(req.params.projectName, req.user.username)
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
+        });
+};
