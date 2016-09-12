@@ -22,20 +22,20 @@
 
                         <div class="form-group">
                             <div class="col-lg-offset-2 col-lg-10">
-                                <label><input icheck type="checkbox" ng-model="isPrivate" checked="checked"><i></i> Is it private repository?</label>
+                                <label><input icheck type="checkbox" ng-model="project.isPrivate" checked="checked"><i></i> Is it private repository?</label>
                             </div>
                         </div>
 
                         <div class="form-group"><label class="col-lg-2 control-label">Username</label>
                             <div class="col-lg-10">
-                                <input type="text" placeholder="Username" class="form-control" ng-model="project.username" ng-disabled="!isPrivate" required>
+                                <input type="text" placeholder="Username" class="form-control" ng-model="project.username" ng-disabled="!project.isPrivate" required>
                                 <span class="help-block m-b-none">Your username to github.com if repository is private</span>
                             </div>
                         </div>
 
                         <div class="form-group"><label class="col-lg-2 control-label">Password</label>
                             <div class="col-lg-10">
-                                <input type="password" placeholder="Password" class="form-control" ng-model="project.password" ng-disabled="!isPrivate" required>
+                                <input type="password" placeholder="Password" class="form-control" ng-model="project.password" ng-disabled="!project.isPrivate" required>
                                 <span class="help-block m-b-none">Your password to github.com if repository is private</span>
                             </div>
                         </div>

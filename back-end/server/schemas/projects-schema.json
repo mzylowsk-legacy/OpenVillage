@@ -10,6 +10,9 @@
       "password": {
         "type": "string"
       },
+      "isPrivate": {
+        "type":  { "enum": [ false, true ] }
+      },
       "description": {
         "type": "string"
       },
@@ -22,12 +25,12 @@
       }
     },
     "required": [
-      "username",
-      "password",
+      "isPrivate",
       "description",
       "url",
       "name"
     ],
-    "maxProperties": 5
+    "minProperties": 4,
+    "maxProperties": 6
   }
 }

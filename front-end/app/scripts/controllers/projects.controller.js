@@ -4,7 +4,10 @@ angular.module('openvillage')
     .controller('ProjectsCtrl', function ($scope, usersService, projectsService, $window, SweetAlert, $state, DTOptionsBuilder, DTColumnDefBuilder) {
 
         $scope.userName = $window.sessionStorage.sessionUsername;
-        $scope.isPrivate = true;
+
+        $scope.project = {
+            isPrivate: true
+        };
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withOption('bFilter', false)

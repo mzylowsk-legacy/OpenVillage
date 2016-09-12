@@ -32,7 +32,7 @@ var runBuild = function (buildEntity, owner) {
                     addComandArg('--mongo-database-name', config.mongodb.databaseName, args);
                     addComandArg('--mongo-collection-name', constants.mongodb.collections.Builds, args);
 
-                    if (project.username && project.password) {
+                    if (project.isPrivate && project.username && project.password) {
                         addComandArg('--username', project.username, args);
                         addComandArg('--password', project.password, args);
                     }
