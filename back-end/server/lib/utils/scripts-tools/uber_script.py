@@ -30,6 +30,7 @@ def are_previous_steps_failed():
 
 def download_repository(workspace, project_name, url, username, password, build_name, mongo_client):
     print('Cloning repository {}'.format(project_name))
+    order = 0
     try:
         if username and password:
             parsed_url = urlparse.urlsplit(url)
@@ -41,14 +42,15 @@ def download_repository(workspace, project_name, url, username, password, build_
 
         print(output)
         status_codes.append(STATUSES['SUCCESS'])
-        update_build_step_in_database(build_name, INITIAL_STEPS_NAMES['CLONE'], output, status_codes[-1], mongo_client)
+        update_build_step_in_database(build_name, order, output, status_codes[-1], mongo_client)
     except subprocess.CalledProcessError as e:
         print('Error in downloading repository: {}'.format(e.output))
         status_codes.append(e.returncode)
-        update_build_step_in_database(build_name, INITIAL_STEPS_NAMES['CLONE'], e.output, status_codes[-1], mongo_client)
+        update_build_step_in_database(build_name, order, e.output, status_codes[-1], mongo_client)
 
 
 def set_repository_version(workspace, project_name, version, build_name, mongo_client):
+    order = 1
     if are_previous_steps_failed():
         print('Skipping due to previous step failed')
         status_codes.append(STATUSES['IGNORED'])
@@ -60,20 +62,23 @@ def set_repository_version(workspace, project_name, version, build_name, mongo_c
         output = subprocess.check_output(['git', 'checkout', version], cwd=repo_dir)
         print(output)
         status_codes.append(STATUSES['SUCCESS'])
-        update_build_step_in_database(build_name, INITIAL_STEPS_NAMES['SET_VERSION'], output, status_codes[-1], mongo_client)
+        update_build_step_in_database(build_name, order, output, status_codes[-1], mongo_client)
     except subprocess.CalledProcessError as e:
         print('Cannot set version: {}'.format(e.output))
         status_codes.append(e.returncode)
-        update_build_step_in_database(build_name, INITIAL_STEPS_NAMES['SET_VERSION'], e.output, status_codes[-1], mongo_client)
+        update_build_step_in_database(build_name, order, e.output, status_codes[-1], mongo_client)
 
 
 def run_build_steps(workspace, project_name, build_steps_list, build_name, mongo_client):
     print('Running specified build steps')
+    order = 1
     repo_dir = os.path.join(workspace, project_name)
     for command in build_steps_list:
+        order = order + 1
         if are_previous_steps_failed():
             print('Skipping due to previous step failed')
             status_codes.append(STATUSES['IGNORED'])
+            update_build_step_in_database(build_name, order, str(e), status_codes[-1], mongo_client)
             continue
         print('Running step: {}'.format(command))
         try:
@@ -82,15 +87,15 @@ def run_build_steps(workspace, project_name, build_steps_list, build_name, mongo
             output = subprocess.check_output(command.split(), cwd=repo_dir)
             print(output)
             status_codes.append(STATUSES['SUCCESS'])
-            update_build_step_in_database(build_name, command, output, status_codes[-1], mongo_client)
+            update_build_step_in_database(build_name, order, output, status_codes[-1], mongo_client)
         except subprocess.CalledProcessError as e:
             print('Cannot perform build step {}'.format(command))
             status_codes.append(e.returncode)
-            update_build_step_in_database(build_name, command, e.output, status_codes[-1], mongo_client)
+            update_build_step_in_database(build_name, order, e.output, status_codes[-1], mongo_client)
         except Exception as e:
             print('Cannot perform build step {}: {}'.format(command, e))
             status_codes.append(STATUSES['FAIL'])
-            update_build_step_in_database(build_name, command, str(e), status_codes[-1], mongo_client)
+            update_build_step_in_database(build_name, order, str(e), status_codes[-1], mongo_client)
 
 
 def delete_repository_dir(workspace, project_name):
@@ -102,8 +107,8 @@ def insert_record_to_database(record_data, mongo_client):
     mongo_client.insert_one(record_data)
 
 
-def update_build_step_in_database(build_name, step_name, build_log, build_status, mongo_client):
-    mongo_client.update({'buildName': build_name, 'steps.name': step_name},
+def update_build_step_in_database(build_name, order, build_log, build_status, mongo_client):
+    mongo_client.update({'buildName': build_name, 'steps.order': order},
                         {'$set': {'steps.$.log': build_log, 'steps.$.status_code': build_status}})
 
 
