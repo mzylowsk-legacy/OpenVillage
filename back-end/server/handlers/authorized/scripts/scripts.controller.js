@@ -6,7 +6,7 @@ var _ = require('lodash'),
     scriptsSchemas = require('../../../schemas/scripts-schema.json'),
     httpStatuses = require('../../../components/http-statuses');
 
-exports.addNewScript = function (req, res) {
+var addNewScript = function (req, res) {
     var errors = schemaValidator.validate(req.body, scriptsSchemas.addNewScript).errors;
     if (errors.length) {
         res.status(400).send(errors);
@@ -20,6 +20,10 @@ exports.addNewScript = function (req, res) {
             res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
         });
 };
+
+exports.addNewScript = addNewScript;
+
+exports.editScript = addNewScript;
 
 exports.deleteScript = function (req, res) {
     scriptsManager.deleteScript(req.params.name, req.user.username)
