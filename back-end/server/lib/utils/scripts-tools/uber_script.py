@@ -78,7 +78,7 @@ def run_build_steps(workspace, project_name, build_steps_list, build_name, mongo
         if are_previous_steps_failed():
             print('Skipping due to previous step failed')
             status_codes.append(STATUSES['IGNORED'])
-            update_build_step_in_database(build_name, order, str(e), status_codes[-1], mongo_client)
+            update_build_step_in_database(build_name, order, '', status_codes[-1], mongo_client)
             continue
         print('Running step: {}'.format(command))
         try:
@@ -117,10 +117,9 @@ def update_build_status(build_name, mongo_client):
     mongo_client.update({'buildName': build_name}, {'$set': {'status_code': status}})
 
 
-def initialize_build(project_name, owner, project_version, build_steps, mongo_client):
+def initialize_build(build_name, project_name, owner, project_version, build_steps, mongo_client):
     print('Initialization build')
     current_time = time.time()
-    build_name = '{}-{}'.format(project_name, current_time)
     prerequisites_steps = [INITIAL_STEPS_NAMES['CLONE'], INITIAL_STEPS_NAMES['SET_VERSION']]
     steps = []
     summary_steps = prerequisites_steps + build_steps if build_steps else prerequisites_steps
@@ -156,6 +155,7 @@ def get_mongo_client(mongo_host, mongo_port, mongo_database_name, mongo_collecti
 def parse_args():
     parser = argparse.ArgumentParser(description='Downloads and builds project stored on Github')
 
+    parser.add_argument('-x', '--build-name', required=True, help='Build name')
     parser.add_argument('-u', '--username', required=False, help='Github username')
     parser.add_argument('-p', '--password', required=False, help='Password for Github user')
     parser.add_argument('-o', '--project-owner', required=False, help='Project owner')
@@ -178,8 +178,9 @@ def main():
     mongo_client = get_mongo_client(args.mongo_host, args.mongo_port, args.mongo_database_name,
                                     args.mongo_collection_name)
 
-    build_name = initialize_build(args.project_name, args.project_owner, args.project_version, args.build_steps,
-                                  mongo_client)
+    build_name = args.build_name
+
+    initialize_build(build_name, args.project_name, args.project_owner, args.project_version, args.build_steps, mongo_client)
 
     if not os.path.exists(args.destination):
         os.makedirs(args.destination)

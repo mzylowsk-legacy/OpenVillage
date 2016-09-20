@@ -21,8 +21,10 @@ var runBuild = function (buildEntity, owner) {
         projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner)
             .then(function (project) {
                 if (project) {
+                    var buildName = project.name + '-' + Date.now();
                     logger.debug('Project %s has been found', buildEntity.projectName);
                     var args = [constants.builder.uberScriptPath];
+                    addComandArg('--build-name', buildName, args);
                     addComandArg('--project-owner', project.owner, args);
                     addComandArg('--project-name', project.name, args);
                     addComandArg('--project-version', buildEntity.projectVersion, args);
@@ -57,7 +59,10 @@ var runBuild = function (buildEntity, owner) {
                     logger.debug('Spawning process: python ' + args);
                     utils.spawnProcess('python', args);
                     logger.debug('Building process has been triggered');
-                    resolve(httpStatuses.Builds.Triggered);
+                    var response = {
+                        buildName: buildName
+                    }
+                    resolve(response);
                 } else {
                     utils.throwError(httpStatuses.Projects.NotExists);
                 }
