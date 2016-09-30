@@ -1,0 +1,62 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Edit script</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a ui-sref="index.main">Home</a>
+            </li>
+            <li>
+                <a ui-sref="index.projects">Projects list</a>
+            </li>
+            <li>
+                <a ui-sref="index.projects.details({name: projectName})">Project detail</a>
+            </li>
+            <li class="active">
+                <strong>Script detail</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row" ng-init="loadScriptData()">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-title">
+                    <h5>Editing script - {{script.name}}</h5>
+                </div>
+
+                <div class="ibox-content">
+                    <form class="form-horizontal" role="form" ng-submit="editScript(script)">
+
+                        <div class="form-group"><label class="col-lg-2 control-label">Name</label>
+                            <div class="col-lg-10">
+                                <input type="text" placeholder="Name" class="form-control" ng-model="script.name" required>
+                                <span class="help-block m-b-none">Unique name of your script</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-lg-2 control-label">Code</label>
+                            <div class="col-lg-10">
+                                <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="script.code">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-lg btn-primary" type="submit">Save</button>
+                                <a class="btn btn-lg btn-white" ui-sref="index.projects.details({name: projectName})">Back</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

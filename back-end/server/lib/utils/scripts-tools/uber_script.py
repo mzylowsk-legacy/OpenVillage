@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import time
 import urlparse
+import ntpath
 
 from pymongo import MongoClient
 
@@ -124,10 +125,12 @@ def initialize_build(build_name, project_name, owner, project_version, build_ste
     steps = []
     summary_steps = prerequisites_steps + build_steps if build_steps else prerequisites_steps
     for ind, step in enumerate(summary_steps):
+        if step.startswith('"') and step.endswith('"'):
+            step = step[1:-1]
         steps.append(dict(
             status_code=STATUSES['WAITING'],
             log='',
-            name=step,
+            name=ntpath.basename(step),
             order=ind
         ))
     status_code = STATUSES['DURING']

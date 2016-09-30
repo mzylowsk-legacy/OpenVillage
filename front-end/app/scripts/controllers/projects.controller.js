@@ -38,7 +38,7 @@ angular.module('openvillage')
                     SweetAlert.swal({
                         title: 'Error occurred',
                         type: 'error',
-                        text: err
+                        text: JSON.stringify(err)
                     });
                 });
         };
@@ -52,7 +52,7 @@ angular.module('openvillage')
                     SweetAlert.swal({
                         title: 'Error occurred',
                         type: 'error',
-                        text: err
+                        text: JSON.stringify(err)
                     });
                 });
         };
@@ -84,7 +84,7 @@ angular.module('openvillage')
                         SweetAlert.swal({
                             title: 'Error occurred',
                             type: 'error',
-                            text: err
+                            text: JSON.stringify(err)
                         });
                     });
             });

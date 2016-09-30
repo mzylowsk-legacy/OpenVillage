@@ -8,24 +8,38 @@
  */
 'use strict';
 
-function MainCtrl($scope, $window, projectsService) {
+function MainCtrl($scope, $window, projectsService, scriptsService, $state, SweetAlert) {
 
-    this.userName = 'Example user';
-    this.helloText = 'Welcome in SeedProject';
-    this.descriptionText = 'It is an application skeleton for a typical AngularJS web app. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects.';
-
+    $scope.$state = $state;
     this.userName = $window.sessionStorage.sessionUsername;
 
-    $scope.loadNumberOfProjects = function() {
+    $scope.loadWidgets = function() {
         $scope.numberOfProjectsOwned = -1;
+        $scope.numberOfScripts = -1;
+
         projectsService.getList()
             .then(function (result) {
                 $scope.numberOfProjectsOwned = result.length;
             }, function (err) {
-                console.log(err);
-                window.alert(err);
+                SweetAlert.swal({
+                    title: 'Error occurred',
+                    type: 'error',
+                    text: JSON.stringify(err)
+                });
+            });
+
+        scriptsService.getList()
+            .then(function (result) {
+                $scope.numberOfScripts = result.scripts.length;
+            }, function (err) {
+                SweetAlert.swal({
+                    title: 'Error occurred',
+                    type: 'error',
+                    text: JSON.stringify(err)
+                });
             });
     };
+
 }
 
 angular

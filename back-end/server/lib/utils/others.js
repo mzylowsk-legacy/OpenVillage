@@ -55,3 +55,7 @@ module.exports.spawnProcess = function(command, args) {
         spawn(command);
     }
 };
+
+module.exports.removeExtension = function(filename) {
+    return filename.replace(/\.[^/.]+$/, '');
+};

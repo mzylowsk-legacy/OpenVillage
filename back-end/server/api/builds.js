@@ -44,7 +44,7 @@ var runBuild = function (buildEntity, owner) {
                         for(var i in buildEntity.steps) {
                             var scriptPath = null;
                             if (buildEntity.steps[i].public) {
-                                scriptPath = path.join(config.builder.workspace.path, '_common_', 'scripts', buildEntity.steps[i].scriptName + '.sh');
+                                scriptPath = path.join(constants.builder.commonScriptsPath, buildEntity.steps[i].scriptName + '.sh');
                             } else {
                                 scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', buildEntity.steps[i].scriptName + '.sh');
                             }

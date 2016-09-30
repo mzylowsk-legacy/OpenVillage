@@ -4,21 +4,13 @@
             <li class="nav-header">
 
                 <div class="profile-element" uib-dropdown>
-                    <a uib-dropdown-toggle href>
+                    <a>
                             <span class="clear">
                                 <span class="block m-t-xs">
                                     <strong class="font-bold">Welcome <i>{{main.userName}}</i></strong>
                              </span>
-                                <span class="text-muted text-xs block">Your menu<b class="caret"></b></span>
                             </span>
                     </a>
-                    <ul uib-dropdown-menu class="animated flipInX m-t-xs">
-                        <li><a ui-sref="index.main">Dashboard</a></li>
-                        <li><a ui-sref="index.profile">Profile</a></li>
-                        <li><a ui-sref="index.projects">My projects</a></li>
-                        <li><a ui-sref="index.minor">Minor</a></li>
-                        <li><a logout-user>Logout</a></li>
-                    </ul>
                 </div>
                 <div class="logo-element">
                     OV
@@ -35,8 +27,8 @@
             <li ui-sref-active="active">
                 <a ui-sref="index.projects"><i class="fa fa-file-o"></i> <span class="nav-label">My projects</span> </a>
             </li>
-            <li ui-sref-active="active">
-                <a ui-sref="index.minor"><i class="fa fa-desktop"></i> <span class="nav-label">Minor page</span></a>
+            <li ui-sref-active="active" data-ng-show="$state.includes('index.projects.details') || $state.includes('index.projects.builds')">
+                <a ui-sref="index.projects.builds({name: $state.params.name})"><i class="fa fa-tasks"></i> <span class="nav-label">Builds logs</span></a>
             </li>
         </ul>
 

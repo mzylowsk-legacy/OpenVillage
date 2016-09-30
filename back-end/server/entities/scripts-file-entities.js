@@ -1,6 +1,7 @@
 'use strict';
 var Q = require('q'),
-    utils = require('../lib/utils/filesystem-tools'),
+    fileUtils = require('../lib/utils/filesystem-tools'),
+    utils = require('../lib/utils/others'),
     path = require('path'),
     config = require('../config/config'),
     constants = require('../components/constants');
@@ -10,7 +11,7 @@ var SCRIPTS_CATALOG = 'scripts';
 
 var initializeUserWorkspace = function (owner) {
     var userScriptsPath = path.join(config.builder.workspace.path, owner, SCRIPTS_CATALOG);
-    return utils.createDirectoryPath(userScriptsPath);
+    return fileUtils.createDirectoryPath(userScriptsPath);
 };
 
 module.exports.saveScript = function (name, code, owner) {
@@ -18,7 +19,7 @@ module.exports.saveScript = function (name, code, owner) {
         initializeUserWorkspace(owner)
             .then(function (workdir) {
                 var scriptPath = path.join(workdir, name + '.sh');
-                return utils.writeFile(scriptPath, code, EXE_MODE);
+                return fileUtils.writeFile(scriptPath, code, EXE_MODE);
             })
             .then(function (resultPath) {
                 resolve(resultPath);
@@ -31,36 +32,64 @@ module.exports.saveScript = function (name, code, owner) {
 
 module.exports.isExistingScript = function (name, owner) {
     var pathToCheck = path.join(config.builder.workspace.path, owner, SCRIPTS_CATALOG, name + '.sh');
-    return utils.isExistingPath(pathToCheck);
+    return fileUtils.isExistingPath(pathToCheck);
 };
 
 module.exports.isExistingDefaultScript = function (name) {
     var pathToCheck = path.join(constants.builder.commonScriptsPath, name + '.sh');
-    return utils.isExistingPath(pathToCheck);
+    return fileUtils.isExistingPath(pathToCheck);
 };
 
 module.exports.deleteScript = function (name, owner) {
     var pathToRemove = path.join(config.builder.workspace.path, owner, SCRIPTS_CATALOG, name + '.sh');
-    return utils.deleteFile(pathToRemove);
+    return fileUtils.deleteFile(pathToRemove);
 };
 
 module.exports.getAllScripts = function (owner) {
     var userWorkdir = path.join(config.builder.workspace.path, owner, SCRIPTS_CATALOG);
-    return utils.listDir(userWorkdir);
+    return Q.Promise(function (resolve, reject) {
+        fileUtils.listDir(userWorkdir)
+            .then(function(files) {
+                var result = {scripts: []};
+                for(var i in files) {
+                    result.scripts.push({
+                        name: utils.removeExtension(files[i])
+                    });
+                }
+                resolve(result);
+            })
+            .catch(function(err) {
+                   reject(err);
+            });
+    });
 };
 
 
-module.exports.getDefaultScripts = function (owner) {
+module.exports.getDefaultScripts = function () {
     var commonScriptsDir = constants.builder.commonScriptsPath;
-    return utils.listDir(commonScriptsDir);
+    return Q.Promise(function (resolve, reject) {
+        fileUtils.listDir(commonScriptsDir)
+            .then(function(files) {
+                var result = {scripts: []};
+                for(var i in files) {
+                    result.scripts.push({
+                        name: utils.removeExtension(files[i])
+                    });
+                }
+                resolve(result);
+            })
+            .catch(function(err) {
+                reject(err);
+            });
+    });
 };
 
 module.exports.getScriptContent = function (name, owner) {
     var pathToRead = path.join(config.builder.workspace.path, owner, SCRIPTS_CATALOG, name + '.sh');
-    return utils.readFile(pathToRead);
+    return fileUtils.readFile(pathToRead);
 };
 
 module.exports.getDefaultScriptContent = function (name) {
     var pathToRead = path.join(constants.builder.commonScriptsPath, name + '.sh');
-    return utils.readFile(pathToRead);
+    return fileUtils.readFile(pathToRead);
 };

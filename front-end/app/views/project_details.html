@@ -1,0 +1,227 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Project detail</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a ui-sref="index.main">Home</a>
+            </li>
+            <li>
+                <a ui-sref="index.projects">Projects list</a>
+            </li>
+            <li class="active">
+                <strong>Project detail</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-lg-9">
+        <div class="wrapper wrapper-content animated fadeInRight" style="padding: 20px 10px 0px; !important;" ng-init="getProjectDetails()">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="m-b-md">
+                                <a href="" class="btn btn-white btn-xs pull-right">Edit project</a>
+
+                                <h2>{{projectName}}</h2>
+                            </div>
+                            <dl class="dl-horizontal">
+                                <dt>Status:</dt>
+                                <dd>
+                                    <span class="label" ng-class="{'label-primary':projectStatus==0, 'label-info':projectStatus==2, 'label-danger':projectStatus==1}">
+                                        {{projectStatus | projectStatusFilter}}
+                                    </span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <dl class="dl-horizontal">
+
+                                <dt>Owner:</dt>
+                                <dd>{{projectDetails.owner}}</dd>
+                                <dt>Commits:</dt>
+                                <dd> 162</dd>
+                                <dt>URL:</dt>
+                                <dd><a href="{{projectDetails.url}}" class="text-navy"> {{projectDetails.url}}</a></dd>
+                                <dt>Is private:</dt>
+                                <dd>{{projectDetails.isPrivate}}</dd>
+                            </dl>
+                        </div>
+                        <div class="col-lg-7" id="cluster_info" ng-show="projectDetails.username">
+                            <dl class="dl-horizontal">
+                                <dt>Username:</dt>
+                                <dd>{{projectDetails.username}}</dd>
+                                <dt>Password:</dt>
+                                <dd> <span class="spoiler">{{projectDetails.password}}</span></dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <dl class="dl-horizontal">
+                                <dt>Completed:</dt>
+                                <dd>
+                                    <div id="buildProgressBar" class="progress progress-striped active m-b-sm">
+                                        <div id="buildInnerProgressBar" style="width: 0%;" class="progress-bar"></div>
+                                    </div>
+                                    <small>
+                                        {{projectStatusDetails}}
+                                    </small>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <dl class="dl-horizontal">
+                                <dt>Project version:</dt>
+                                <dd>
+                                    <input type="text" placeholder="branch/commit" class="form-control input-sm" ng-model="projectVersion">
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row m-t-sm" ng-show="projectStatus!==2 && projectStatus!==-1">
+                        <div class="col-lg-12">
+                            <div class="panel blank-panel ui-tab pull-right">
+                                <a ui-sref="index.projects.builds({name: projectName, buildName: buildName})" type="button" class="btn btn-primary animated flip">Show log</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t-sm">
+                        <div class="col-lg-12">
+                            <div class="panel blank-panel ui-tab">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="wrapper wrapper-content project-manager">
+            <h4>Project description</h4>
+
+            <p class="small">
+                {{projectDetails.description}}
+            </p>
+
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="selectedTasks.length!=0">
+    <div class="wrapper wrapper-content animated fadeInUpBig">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <h3>My selected scripts</h3>
+                    <p class="small"><i class="fa fa-hand-o-up"></i> Drag tasks to change order</p>
+                    <ul ui-sortable="sortableOptions" class="sortable-list connectList agile-list" ng-model="selectedTasks">
+                        <li class="" ng-class="{'success-element': task.public, 'info-element': !task.public}" ng-repeat="task in selectedTasks">
+                            {{task.scriptName}}
+                            <a class="pull-right btn btn-xs btn-danger" ng-click="removeTask($index)"><i class="fa fa-trash"></i> Remove</a>
+                            <div class="agile-detail">
+                                <i class="fa fa-share"></i> Args: {{task.args}}
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="row m-t-sm" ng-show="selectedTasks.length!=0">
+                        <div class="col-lg-12">
+                            <div class="panel blank-panel ui-tab pull-right">
+                                <input type="button" class="btn btn-primary" ng-click="runBuild()" value="Run Build" ng-disabled="isProjectBuilding"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-init="getScriptsList()">
+    <div class="col-md-7">
+        <div class="wrapper wrapper-content animated fadeInUp">
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>All scripts assigned to this project</h5>
+                    <div class="ibox-tools">
+                        <a ui-sref="index.projects.scripts.new({name: projectName})" class="btn btn-primary btn-sm">Create new script</a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="project-list">
+                        <table class="table table-hover" datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+                            <thead>
+                            <tr>
+                                <th>State</th>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr ng-repeat="s in scripts">
+                                <td class="project-status">
+                                    <span class="label label-primary">Active</span>
+                                </td>
+                                <td class="project-title">
+                                    <a ui-sref="index.projects.scripts.edit({name: projectName, scriptName: s.name})">{{s.name}}</a>
+                                </td>
+                                <td class="project-actions">
+                                    <a class="btn btn-success btn-sm" ng-click="queueTask(s.name, false)"><i class="fa fa-tasks"></i> Add to queue </a>
+                                    <a ui-sref="index.projects.scripts.edit({name: projectName, scriptName: s.name})" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i> Edit </a>
+                                    <a href="" class="btn btn-danger btn-sm" ng-click="deleteScript(s.name, $index)"><i class="fa fa-trash"></i> Delete </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="wrapper wrapper-content animated fadeInUp">
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>Public scripts available to use</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="project-list">
+                        <table class="table table-hover" datatable="ng" dt-options="dtOptionsPublicScripts" dt-column-defs="dtColumnDefsPublicScripts">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr ng-repeat="s in scriptsPublic">
+                                <td class="project-title">
+                                    <a ui-sref="index.projects.scripts.edit({name: projectName, scriptName: s.name})">{{s.name}}</a>
+                                </td>
+                                <td class="project-actions">
+                                    <a class="btn btn-primary btn-sm" ng-click="queueTask(s.name, true)"><i class="fa fa-tasks"></i> Add to queue </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

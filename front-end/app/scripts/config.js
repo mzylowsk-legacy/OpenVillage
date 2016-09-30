@@ -71,6 +71,66 @@ function config($stateProvider, $urlRouterProvider, $loginProvider) {
                 saveState: false
             }
         })
+        .state('index.projects.details', {
+            url: '/{name}/details',
+            views: {
+                '@index':  {
+                    templateUrl: 'views/project_details.html',
+                    controller: 'ProjectDetailsCtrl'
+                }
+            },
+            data: {
+                pageTitle: 'Create new project',
+                requireLogin: true,
+                saveState: false
+            }
+        })
+        .state('index.projects.builds', {
+            url: '/{name}/builds/:buildName',
+            views: {
+                '@index':  {
+                    templateUrl: 'views/project_builds.html',
+                    controller: 'ProjectBuildsCtrl'
+                }
+            },
+            data: {
+                pageTitle: 'Display project builds',
+                requireLogin: true,
+                saveState: false
+            }
+        })
+        .state('index.projects.scripts', {
+            url: '/{name}/scripts',
+            abstract: true,
+        })
+        .state('index.projects.scripts.new', {
+            url: '/new',
+            views: {
+                '@index':  {
+                    templateUrl: 'views/script_new.html',
+                    controller: 'ScriptsCtrl'
+                }
+            },
+            data: {
+                pageTitle: 'Create new script',
+                requireLogin: true,
+                saveState: false
+            }
+        })
+        .state('index.projects.scripts.edit', {
+            url: '/{scriptName}/edit',
+            views: {
+                '@index':  {
+                    templateUrl: 'views/script_edit.html',
+                    controller: 'ScriptsCtrl'
+                }
+            },
+            data: {
+                pageTitle: 'Create new script',
+                requireLogin: true,
+                saveState: false
+            }
+        })
         .state('login', {
             url: '/login',
             templateUrl: 'views/login.html',
@@ -135,3 +195,24 @@ angular
     .run(function($rootScope, $state) {
         $rootScope.$state = $state;
     });
+
+angular
+    .module('openvillage')
+    .filter('projectStatusFilter', function() {
+    return function(input) {
+        switch (input) {
+            case 0: {
+                return 'Success';
+            }
+            case 1: {
+                return 'Error';
+            }
+            case 2: {
+                return 'Working';
+            }
+            default: {
+                return 'Idle';
+            }
+        }
+    };
+});

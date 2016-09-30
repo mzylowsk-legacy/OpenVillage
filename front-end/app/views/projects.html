@@ -1,6 +1,14 @@
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
         <h2>My projects</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a ui-sref="index.main">Home</a>
+            </li>
+            <li class="active">
+                <strong>Projects list</strong>
+            </li>
+        </ol>
     </div>
 </div>
 <div class="row" ng-init="getProjectsList()">
@@ -38,7 +46,7 @@
                                     <span class="label label-primary">Active</span>
                                 </td>
                                 <td class="project-title">
-                                    <a ui-sref="project_detail">{{p.name}}</a>
+                                    <a ui-sref="index.projects.details({name: p.name})">{{p.name}}</a>
                                     <br/>
                                     <small>{{p.owner}}</small>
                                 </td>
@@ -52,7 +60,7 @@
                                     <span>{{p.description}}</span>
                                 </td>
                                 <td class="project-actions">
-                                    <a href="" class="btn btn-success btn-sm"><i class="fa fa-folder"></i> View </a>
+                                    <a ui-sref="index.projects.details({name: p.name})" class="btn btn-success btn-sm"><i class="fa fa-folder"></i> View </a>
                                     <!--<a href="" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i> Edit </a>-->
                                     <a href="" class="btn btn-danger btn-sm" ng-click="deleteProject(p.name, $index)"><i class="fa fa-trash"></i> Delete </a>
                                 </td>

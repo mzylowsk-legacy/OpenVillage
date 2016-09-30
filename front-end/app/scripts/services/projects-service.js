@@ -41,4 +41,16 @@ angular.module('openvillage')
             });
         };
 
+        this.getProjectDetails = function (projectName) {
+            return $q(function (resolve, reject) {
+                $http.get(SERVER_URL + '/auth/api/projects/' + projectName + '/details')
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
+
     });

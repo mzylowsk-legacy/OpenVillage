@@ -1,0 +1,114 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-5">
+        <h2>Project builds</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a ui-sref="index.main">Home</a>
+            </li>
+            <li>
+                <a ui-sref="index.projects">Projects list</a>
+            </li>
+            <li>
+                <a ui-sref="index.projects.details({name:$state.params.name})">Projects details</a>
+            </li>
+            <li class="active">
+                <strong>Project builds</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row" ng-init="getBuildsList()">
+    <div class="col-md-12">
+        <div class="wrapper wrapper-content animated fadeInUp" style="padding: 20px 10px 0px; !important;">
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>All builds assigned to this project</h5>
+                    <div class="ibox-tools">
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="project-list">
+                        <table class="table table-hover" datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+                            <thead>
+                            <tr>
+                                <th>State</th>
+                                <th>Name</th>
+                                <th>Project version</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr ng-repeat="b in buildsList">
+                                <td class="project-status">
+                                    <span class="label" ng-class="{'label-primary':b.status_code==0, 'label-danger':b.status_code!=0}">{{b.status_code}}</span>
+                                </td>
+                                <td class="project-title">
+                                    <a ng-click="getBuildDetails(b.buildName)">{{b.buildName}}</a>
+                                </td>
+                                <td class="project-title">
+                                    <strong>{{b.projectVersion}}</strong>
+                                </td>
+                                <td class="project-title">
+                                    <strong>{{formatDateTime(b.timestamp)}}</strong>
+                                </td>
+                                <td class="project-actions">
+                                    <a class="btn btn-success btn-sm" ng-click="getBuildDetails(b.buildName)"><i class="fa fa-tasks"></i> Show</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row animated fadeInRight">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content" id="ibox-content">
+
+                <div class="row">
+                    <div class="col-md-7 col-md-offset-2">
+                        <dl class="dl-horizontal">
+
+                            <dt>Build name:</dt>
+                            <dd>{{buildDetails.buildName}}</dd>
+                            <dt>Project version:</dt>
+                            <dd>{{buildDetails.projectVersion}}</dd>
+                            <dt>Project name:</dt>
+                            <dd>{{buildDetails.projectName}}</dd>
+                            <dt>Timestamp:</dt>
+                            <dd>{{formatDateTime(buildDetails.timestamp)}}</dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
+                    <div class="vertical-timeline-block" ng-repeat="d in buildDetails.steps">
+                        <div class="vertical-timeline-icon" ng-class="{'navy-bg':d.status_code==0, 'red-bg':d.status_code!=0}">
+                            <i class="fa fa-briefcase"></i>
+                        </div>
+
+                        <div class="vertical-timeline-content">
+                            <h2>{{d.name}}</h2>
+                            <textarea ui-codemirror ui-codemirror-opts="editorOptions" id="code" ng-model="d.log"></textarea>
+                            <span class="vertical-date">
+                                     Status code<br/>
+                                    <small>{{d.status_code}}</small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

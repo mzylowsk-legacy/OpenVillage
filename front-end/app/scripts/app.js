@@ -10,7 +10,9 @@
             'ui.bootstrap',     // Bootstrap
             'ui.router.login',   // Login module
             'oitozero.ngSweetAlert', //ngSweetAlert
-            'datatables'
+            'datatables',
+            'ui.sortable',
+            'ui.codemirror'
         ]);
 
     angular.module('openvillage')
