@@ -36,7 +36,7 @@ def download_repository(workspace, project_name, url, username, password, build_
         if username and password:
             parsed_url = urlparse.urlsplit(url)
             output = subprocess.check_output(
-                ['git', 'clone', '{}:{}@{}'.format(username, password, parsed_url.netloc), project_name],
+                ['git', 'clone', 'https://{}:{}@{}{}'.format(username, password, parsed_url.netloc, parsed_url.path)],
                 cwd=workspace)
         else:
             output = subprocess.check_output(['git', 'clone', url, project_name], cwd=workspace)
