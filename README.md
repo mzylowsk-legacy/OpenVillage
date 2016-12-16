@@ -13,3 +13,10 @@ For running webservice neccessary dependencies should be installed. Follow the c
 * Install python pip: `sudo apt install python-pip`.
 * Install ansible in 2.2.0.0 version: `sudo pip install ansible==2.2.0.0`.
 * Go to [ansible-deployment](https://github.com/GroupProjectWETI/OpenVillage/tree/master/prepare_env/ansible-deployment) directory and run ansible script for installing neccessary dependencies: `./run.sh --ask-sudo-pass`.
+
+## Development
+For running webservice on dev machine follow to instructions:
+* [back-end](https://github.com/GroupProjectWETI/OpenVillage/tree/master/back-end)
+* [front-end](https://github.com/GroupProjectWETI/OpenVillage/tree/master/front-end)
+
+Both part of webservice should be runned for getting full functionality.
