@@ -1,17 +1,22 @@
 ---
 - name: install python from apt
-  apt: name={{ item }} update_cache=yes state=present
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: present
+  become: yes
   with_items:
     - python-dev
     - libffi-dev
     - libssl-dev
     - python-pip
-
-- name: install python setuptools
-  shell: "curl 'https://bootstrap.pypa.io/ez_setup.py' -o - | sudo -E python"
+    - python-setuptools
 
 - name: install pip packages
-  pip: name={{ item }} state=latest
+  pip:
+    name: "{{ item }}"
+    state: latest
+  become: yes
   with_items:
     - tox
     - pymongo

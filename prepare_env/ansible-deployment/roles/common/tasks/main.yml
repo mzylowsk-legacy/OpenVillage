@@ -1,6 +1,10 @@
 ---
 - name: install apt prerequisites
-  apt: name={{ item }} update_cache=yes state=present
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: present
+  become: yes
   with_items:
     - curl
     - mongodb
@@ -8,5 +12,8 @@
     - mongodb-clients
 
 - name: run mongod service
-  service: name=mongodb state=started
+  service:
+    name: mongodb
+    state: started
+  become: yes
 
