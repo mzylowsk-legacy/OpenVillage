@@ -23,6 +23,7 @@ module.exports.findProjectByNameAndOwner = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
         db[collection].findOne({name: name, owner: owner}, function (err, result) {
             if (!err) {
+                delete result.password;
                 resolve(result);
             } else {
                 reject(err);
