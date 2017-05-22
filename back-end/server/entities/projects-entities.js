@@ -48,6 +48,11 @@ module.exports.findProjectsByOwner = function (owner) {
     return Q.Promise(function (resolve, reject) {
         db[collection].find({owner: owner}).toArray(function (err, result) {
             if (!err) {
+
+                result.forEach(function (project) {
+                   delete project.password;
+                });
+
                 resolve(result);
             } else {
                 reject(err);
