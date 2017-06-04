@@ -23,7 +23,27 @@ module.exports.findProjectByNameAndOwner = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
         db[collection].findOne({name: name, owner: owner}, function (err, result) {
             if (!err) {
-                resolve(result);
+                if(result) {
+                    var GitHub = require("octocat");
+                    var client;
+                    if(result.isPrivate == true) {
+                        client = new GitHub({
+                            username: result.username,
+                            password: result.password
+                        });
+                    }
+                    else{
+                        client = new GitHub();
+                    }
+                    var repoName = result.url.replace('https://github.com/', '');
+                    const repo = client.repo(repoName);
+                    repo.branches().then(function (Page) {
+                        result.versions = Page.list;
+                        resolve(result);
+                    });
+                }
+                else
+                    resolve(result);
             } else {
                 reject(err);
             }
