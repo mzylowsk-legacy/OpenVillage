@@ -1,0 +1,38 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Reports</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a ui-sref="index.main">Home</a>
+            </li>
+            <li class="active">
+                <strong>Reports</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Reports settings</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <div>
+                            <label> Turn on reports <input icheck type="checkbox" ng-model="report.isEnabled" checked="checked"></label>
+                        </div>
+                        <div class="col-lg-offset-1 row m-t-lg" ng-show="report.isEnabled">
+                            Period*: <select ng-required="true" ng-model="selectedPeriod" ng-options="p for p in periods"> </select>
+                        </div>
+                        <div class="col-lg-offset-1 row m-t" ng-show="report.isEnabled">
+                            Email: <input type="text" placeholder="default email">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

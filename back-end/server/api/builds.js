@@ -1,6 +1,7 @@
 'use strict';
 
 var projectsEntities = require('../entities/projects-entities'),
+    reportsEntities = require('../entities/reports-entities'),
     buildsEntities = require('../entities/builds-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
