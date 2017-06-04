@@ -18,7 +18,7 @@ var addComandArg = function(argName, argValue, argsArray) {
 
 var runBuild = function (buildEntity, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner)
+        projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
             .then(function (project) {
                 if (project) {
                     var buildName = project.name + '-' + Date.now();
