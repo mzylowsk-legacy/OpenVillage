@@ -46,21 +46,22 @@ module.exports.deleteScript = function (name, owner) {
 };
 
 module.exports.getAllScripts = function (owner) {
-    var userWorkdir = path.join(config.builder.workspace.path, owner, SCRIPTS_CATALOG);
     return Q.Promise(function (resolve, reject) {
-        fileUtils.listDir(userWorkdir)
-            .then(function(files) {
-                var result = {scripts: []};
-                for(var i in files) {
-                    result.scripts.push({
-                        name: utils.removeExtension(files[i])
-                    });
-                }
-                resolve(result);
-            })
-            .catch(function(err) {
-                   reject(err);
-            });
+        initializeUserWorkspace(owner).then(function (workdir) {
+            fileUtils.listDir(workdir)
+                .then(function(files) {
+                    var result = {scripts: []};
+                    for(var i in files) {
+                        result.scripts.push({
+                            name: utils.removeExtension(files[i])
+                        });
+                    }
+                    resolve(result);
+                })
+                .catch(function(err) {
+                    reject(err);
+                });
+        });
     });
 };
 
