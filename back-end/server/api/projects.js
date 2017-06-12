@@ -9,7 +9,7 @@ var projectsEntities = require('../entities/projects-entities'),
 
 var addNewProject = function (projectEntity, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(projectEntity.name, owner)
+        projectsEntities.findProjectByNameAndOwner(projectEntity.name, owner, false)
             .then(function (exist) {
                 if (!exist) {
                     projectEntity.owner = owner;
@@ -31,7 +31,7 @@ var addNewProject = function (projectEntity, owner) {
 
 var deleteProject = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(name, owner)
+        projectsEntities.findProjectByNameAndOwner(name, owner, false)
             .then(function(project) {
                 if(project) {
                     logger.debug('Project ' + name + ' (user: ' + owner + ') has been found.');
@@ -67,7 +67,7 @@ var getProjects = function (owner) {
 
 var getProject = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(name, owner)
+        projectsEntities.findProjectByNameAndOwner(name, owner, false)
             .then(function (project) {
                 if (project) {
                     logger.debug('Project for ' + owner + ' found.');
