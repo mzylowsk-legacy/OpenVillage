@@ -38,7 +38,15 @@ module.exports.findProjectByNameAndOwner = function (name, owner) {
                     var repoName = result.url.replace('https://github.com/', '');
                     const repo = client.repo(repoName);
                     repo.branches().then(function (Page) {
-                        result.versions = Page.list;
+
+                        var all = [];
+                        var nextP = Page;
+                        all = all.concat(nextP.list);
+                        while(Page.hasNext()){
+                            nextP = nextP.next();
+                            all = all.concat(nextP.list);
+                        }
+                        result.versions = all;
                         resolve(result);
                     });
                 }
