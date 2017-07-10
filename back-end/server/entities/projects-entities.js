@@ -19,9 +19,9 @@ module.exports.addProject = function (project) {
     });
 };
 
-module.exports.findProjectByNameAndOwner = function (name, owner) {
+module.exports.findProjectByNameAndOwner = function (name, owner, shouldReturnPassword) {
     return Q.Promise(function (resolve, reject) {
-        db[collection].findOne({name: name, owner: owner}, function (err, result) {
+        db[collection].findOne({name: name, owner: owner}, shouldReturnPassword ? {} : {password: 0}, function (err, result) {
             if (!err) {
                 resolve(result);
             } else {
@@ -47,6 +47,9 @@ module.exports.findProjectsByOwner = function (owner) {
     return Q.Promise(function (resolve, reject) {
         db[collection].find({owner: owner}).toArray(function (err, result) {
             if (!err) {
+                result.forEach(function (project) {
+                   delete project.password;
+                });
                 resolve(result);
             } else {
                 reject(err);
