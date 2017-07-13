@@ -5,4 +5,3 @@ var _ = require('lodash'),
     schemaValidator = require('../../../lib/schema-validator'),
     scriptsSchemas = require('../../../schemas/scripts-schema.json'),
     httpStatuses = require('../../../components/http-statuses');
-
