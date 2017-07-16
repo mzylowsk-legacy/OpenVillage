@@ -59,6 +59,9 @@
                                 <td class="project-actions">
                                     <a class="btn btn-success btn-sm" ng-click="getBuildDetails(b.buildName)"><i class="fa fa-tasks"></i> Show</a>
                                 </td>
+                                <td class="project-actions">
+                                    <a class="btn btn-success btn-sm" ng-if="b.status_code == 0" ng-click="getZipPackage(b.projectVersion, b.commit_sha)"><i class="fa fa-file-archive-o"/> Zip</a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>

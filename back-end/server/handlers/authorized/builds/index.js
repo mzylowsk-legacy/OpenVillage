@@ -8,5 +8,6 @@ var router = express.Router();
 router.post('/run', controller.runBuild);
 router.get('/get/:name', controller.getBuildByName);
 router.get('/project/:projectName', controller.getBuildsByProjectName);
+router.get('/project/zip/:projectName/:branchName/:commitSHA', controller.getZipPackage);
 
 module.exports = router;

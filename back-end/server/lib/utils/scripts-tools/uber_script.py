@@ -118,7 +118,7 @@ def update_build_status(build_name, mongo_client):
     mongo_client.update({'buildName': build_name}, {'$set': {'status_code': status}})
 
 
-def initialize_build(build_name, project_name, owner, project_version, build_steps, mongo_client):
+def initialize_build(build_name, project_name, owner, project_version, build_steps, commitSHA, mongo_client):
     print('Initialization build')
     current_time = time.time()
     prerequisites_steps = [INITIAL_STEPS_NAMES['CLONE'], INITIAL_STEPS_NAMES['SET_VERSION']]
@@ -142,7 +142,8 @@ def initialize_build(build_name, project_name, owner, project_version, build_ste
         projectName=project_name,
         steps=steps,
         status_code=status_code,
-        timestamp=str(build_start_time)
+        timestamp=str(build_start_time),
+        commit_sha=commitSHA
     )
     print('Adding initialize record to database: {}'.format(build_entity))
     insert_record_to_database(build_entity, mongo_client)
@@ -171,6 +172,7 @@ def parse_args():
     parser.add_argument('-m', '--mongo-port', required=True, type=int, help='MongoDb port')
     parser.add_argument('-a', '--mongo-database-name', required=True, help='MongoDb database name')
     parser.add_argument('-c', '--mongo-collection-name', required=True, help='MongoDb collection name')
+    parser.add_argument('-t', '--commitSHA', required=True, help='GitHub head commit sha')
 
     return parser.parse_args()
 
@@ -183,7 +185,7 @@ def main():
 
     build_name = args.build_name
 
-    initialize_build(build_name, args.project_name, args.project_owner, args.project_version, args.build_steps, mongo_client)
+    initialize_build(build_name, args.project_name, args.project_owner, args.project_version, args.build_steps, args.commitSHA, mongo_client)
 
     if not os.path.exists(args.destination):
         os.makedirs(args.destination)

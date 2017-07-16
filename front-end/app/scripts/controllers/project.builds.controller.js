@@ -50,6 +50,19 @@ angular.module('openvillage')
                 });
         };
 
+        $scope.getZipPackage = function(branchName, commitSHA) {
+            buildsService.getZipPackage($scope.projectName, branchName, commitSHA)
+                .then(function (res) {
+                    $scope.test=res;
+                }, function (err) {
+                    SweetAlert.swal({
+                        title: 'Error occurred',
+                        type: 'error',
+                        text: JSON.stringify(err)
+                    });
+                });
+        };
+
         if($state.params.buildName) {
             $scope.getBuildDetails($state.params.buildName);
         }
