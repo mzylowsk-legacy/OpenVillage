@@ -41,7 +41,7 @@ exports.getBuildsByProjectName = function (req, res) {
 };
 
 exports.getZipPackage = function (req, res) {
-    buildsManager.getZipPackage(req.params.projectName, req.params.branchName, req.params.commitSHA, req.user.username)
+    buildsManager.getZipPackage(req.params.projectName, req.params.commitSHA, req.user.username)
         .then (function (result) {
             res.send(result);
         })

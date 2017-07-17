@@ -9,9 +9,7 @@ var projectsEntities = require('../entities/projects-entities'),
     config = require('../config/config'),
     path = require('path'),
     Q = require('q'),
-    GitHub = require('octocat'),
-    Octokat = require('octokat'),
-    fs = require('fs');
+    GitHub = require('octocat');
 
 
 var addComandArg = function(argName, argValue, argsArray) {
@@ -120,28 +118,13 @@ var getBuildsByProjectName = function (projectName, owner) {
     });
 };
 
-var getZipPackage = function (projectName, branchName, commitSHA, owner) {
+var getZipPackage = function (projectName, commitSHA, owner) {
     return Q.Promise(function (resolve, reject) {
         projectsEntities.findProjectByNameAndOwner(projectName, owner, true)
             .then(function (project) {
                 logger.debug('Project %s fetched from the database.', projectName);
-                var octokat = project.isPrivate ? new Octokat({
-                    username: project.username,
-                    password: project.password
-                }) : new Octokat();
-                octokat.fromUrl('https://github.com/{repo}/archive/{sha}.zip',{
-                    repo: project.url.replace('https://github.com/', ''),
-                    sha: commitSHA
-                }).fetch(function (error, result) {
-                    var buffer = new Buffer.from(result);
-                    fs.writeFile('./test1.zip', buffer, function (err) {
-                       if (err) {
-                           throw err;
-                       } else {
-                           console.log("File saved");
-                       }
-                    });
-                });
+                var missingSlash = project.url.endsWith('/') ? '' : '/';
+                resolve(project.url + missingSlash + 'archive/' + commitSHA + '.zip');
             })
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));

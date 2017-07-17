@@ -76,9 +76,9 @@ angular.module('openvillage')
             });
         };
 
-        this.getZipPackage = function (projectName, branchName, commitSHA) {
+        this.getZipPackage = function (projectName, commitSHA) {
             return $q(function (resolve, reject) {
-               $http.get(SERVER_URL + '/auth/api/builds/project/zip/' + projectName + '/' + branchName + '/' + commitSHA)
+               $http.get(SERVER_URL + '/auth/api/builds/project/zip/' + projectName + '/' + commitSHA)
                    .success(function (data) {
                        resolve(data);
                    })
