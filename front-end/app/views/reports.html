@@ -13,26 +13,26 @@
 </div>
 <div class="wrapper wrapper-content">
     <div class="row animated fadeInRight">
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-md-6 col-md-offset-1">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>Reports settings</h5>
                 </div>
-                <form name="userForm" ng-submit="saveReports(userForm.$valid)" class="ibox-content">
+                <form name="userForm" ng-submit="sendReport(userForm.$valid)" class="ibox-content">
+                    <div>
+                        <a class="btn btn-primary btn-sm" ng-click="adding = !adding">Add new report</a>
+                    </div>
                     <div class="form-group">
-                        <div>
-                            <label> Turn on reports <input icheck type="checkbox" ng-model="report.isEnabled" checked="checked"></label>
+                        <div class="col-lg-offset-1 row m-t-lg" ng-show="adding">
+                            <dt>From date*:</dt>
+                                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" is-open="open" data-ng-click="open=true" ng-required="true" ng-model="date" required> </input>
                         </div>
-                        <div class="col-lg-offset-1 row m-t-lg" ng-show="report.isEnabled">
-                            Period*: <select ng-required="true" ng-model="selectedPeriod" ng-options="p for p in periods" required> </select>
-                            <p ng-show="!selectedPeriod" class="help-block">Choose a period.</p>
+                        <div class="col-lg-offset-1 row m-t-lg" ng-show="adding">
+                            <dt>Email*:</dt>
+                                <input type="email" ng-model="email" required>
                         </div>
-                        <div class="col-lg-offset-1 row m-t" ng-show="report.isEnabled">
-                            Email*: <input type="email" ng-model="email" required>
-                            <p ng-show="userForm.email.$invalid" class="help-block">Enter a valid email.</p>
-                        </div>
-                        <div class="col-lg-offset-1 row m-t">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="col-lg-offset-1 row m-t" ng-show="adding">
+                            <button type="submit" class="btn btn-primary">Send</button>
                         </div>
                     </div>
                 </form>
