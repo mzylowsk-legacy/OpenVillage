@@ -2,7 +2,7 @@
 
 FILES=`find . -name "*.js"`
 
-if ["$FILES" = "" ]; then
+if [ "$FILES" = "" ]; then
   exit 0
 fi
 
