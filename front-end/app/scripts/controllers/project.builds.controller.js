@@ -50,6 +50,33 @@ angular.module('openvillage')
                 });
         };
 
+        $scope.getZipPackage = function(commitSHA) {
+            buildsService.getZipPackage($scope.projectName, commitSHA)
+                .then(function (res) {
+                    SweetAlert.swal({
+                        title: 'Zip address generated',
+                        text: 'Do you want to download a package?',
+                        type: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'Download'
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            console.log('Zip package download confirmed');
+                            window.open(res, '_blank');
+                            window.focus();
+                        } else {
+                            console.log('Zip package download cancelled');
+                        }
+                    });
+                }, function (err) {
+                    SweetAlert.swal({
+                        title: 'Error occurred',
+                        type: 'error',
+                        text: JSON.stringify(err)
+                    });
+                });
+        };
+
         if($state.params.buildName) {
             $scope.getBuildDetails($state.params.buildName);
         }
