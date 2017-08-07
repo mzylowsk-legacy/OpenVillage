@@ -31,3 +31,28 @@ module.exports.findBuildsByProjectNameAndOwner = function (projectName, owner) {
             });
     });
 };
+
+module.exports.findFailedBuildsWithMailNotSent = function () {
+    return Q.Promise(function (resolve, reject) {
+         db[collection].find({isEmailSent: false, status_code: 1})
+             .toArray(function (err, result) {
+                 if (!err) {
+                     resolve(result);
+                 } else {
+                     reject(err);
+                 }
+             });
+     });
+}
+
+module.exports.updateInfoAboutEmailSent = function (build) {
+    return Q.Promise(function (resolve, reject) {
+        db[collection].update({buildName: build.buildName}, {$set: {isEmailSent: true}}, {strict: true}, function (err, result) {
+            if(!err) {
+                resolve(result);
+            } else {
+                reject(err);
+            }
+        });
+    });
+};

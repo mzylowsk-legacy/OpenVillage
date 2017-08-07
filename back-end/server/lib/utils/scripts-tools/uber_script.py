@@ -143,7 +143,8 @@ def initialize_build(build_name, project_name, owner, project_version, build_ste
         steps=steps,
         status_code=status_code,
         timestamp=str(build_start_time),
-        commit_sha=commitSHA
+        commit_sha=commitSHA,
+        isEmailSent=False
     )
     print('Adding initialize record to database: {}'.format(build_entity))
     insert_record_to_database(build_entity, mongo_client)
