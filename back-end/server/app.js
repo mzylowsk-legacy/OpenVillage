@@ -16,6 +16,7 @@ var server = require('http').createServer(app);
 
 require('./config/express')(app);
 require('./routes')(app);
+require('./jobs/jobs');
 
 process.on('unhandledRejection', function (reason, p) {
     console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason);
