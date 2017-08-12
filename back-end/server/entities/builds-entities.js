@@ -69,3 +69,16 @@ module.exports.updateInfoAboutEmailSent = function (build) {
         });
     });
 };
+
+module.exports.findBuildWithCommitSha = function (projectName, owner, commitSha) {
+    return Q.Promise(function (resolve, reject) {
+        db[collection].find({commit_sha: commitSha, projectName: projectName, owner: owner})
+            .toArray(function (err, result) {
+                if(!err) {
+                    resolve(result);
+                } else {
+                    reject(err);
+                }
+        });
+    });
+};

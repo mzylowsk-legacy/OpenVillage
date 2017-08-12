@@ -47,6 +47,8 @@
                                 <dd><a href="{{projectDetails.url}}" class="text-navy"> {{projectDetails.url}}</a></dd>
                                 <dt>Is private:</dt>
                                 <dd>{{projectDetails.isPrivate}}</dd>
+                                <dt>Auto script:</dt>
+                                <dd>{{projectDetails.autoScript}}</dd>
                                 <div id="cluster_info" ng-show="projectDetails.username">
                                     <dt>Username:</dt>
                                     <dd>{{projectDetails.username}}</dd>
@@ -192,6 +194,8 @@
                                 </td>
                                 <td class="project-actions">
                                     <a class="btn btn-success btn-sm" ng-click="queueTask(s.name, false)"><i class="fa fa-tasks"></i> Add to queue </a>
+                                    <a class="btn btn-warning btn-sm" ng-if="s.name === projectDetails.autoScript" ng-click="setAsAutoScript('')"><i class="fa fa-tasks"></i> Unset auto script </a>
+                                    <a class="btn btn-warning btn-sm" ng-if="s.name !== projectDetails.autoScript" ng-click="setAsAutoScript(s.name)"><i class="fa fa-tasks"></i> Set as auto script </a>
                                     <a ui-sref="index.projects.scripts.edit({name: projectName, scriptName: s.name})" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i> Edit </a>
                                     <a href="" class="btn btn-danger btn-sm" ng-click="deleteScript(s.name, $index)"><i class="fa fa-trash"></i> Delete </a>
                                 </td>
