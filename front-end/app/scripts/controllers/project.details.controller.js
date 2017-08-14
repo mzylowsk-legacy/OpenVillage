@@ -177,6 +177,15 @@ angular.module('openvillage')
                 });
         };
 
+        $scope.setCronJob = function () {
+            var body = {
+                'projectVersion': $scope.projectVersion,
+                'projectName': $scope.projectName,
+                'steps': $scope.selectedTasks
+            };
+
+        };
+
         $scope.stopWatchingBuild = function() {
             if (angular.isDefined(buildWatcher)) {
                 $interval.cancel(buildWatcher);

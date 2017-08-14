@@ -52,6 +52,18 @@ angular.module('openvillage')
             });
         };
 
+        this.setCronJob = function (body) {
+            return $q(function (resolve, reject) {
+               $http.post(SERVER_URL + '/auth/api/builds/cron', body)
+                   .success(function (data) {
+                       resolve(data);
+                   })
+                   .error(function (err) {
+                       reject(err);
+                   });
+            });
+        };
+
         this.addNewScript = function (script) {
             return $q(function (resolve, reject) {
                 $http.post(SERVER_URL + '/auth/api/scripts/add', script)

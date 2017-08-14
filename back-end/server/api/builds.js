@@ -133,8 +133,22 @@ var getZipPackage = function (projectName, commitSHA, owner) {
     });
 };
 
+var setCronJob = function (buildEntity, owner) {
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
+            .then(function (project) {
+                //TODO tu dokończyć ustawianie crona
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
 module.exports = {
     runBuild: runBuild,
+    setCronJob: setCronJob,
     getBuildByName: getBuildByName,
     getBuildsByProjectName: getBuildsByProjectName,
     getZipPackage: getZipPackage

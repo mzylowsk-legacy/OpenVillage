@@ -1,0 +1,50 @@
+{
+  "setCronJob": {
+    "id": "setCronJob",
+    "type": "object",
+    "properties": {
+      "projectVersion": {
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
+      },
+      "projectName": {
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "scriptName": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
+            },
+            "args": {
+              "type": "string"
+            },
+            "public": {
+              "type":  { "enum": [ false, true ] }
+            }
+          },
+          "required": [
+            "scriptName",
+            "args",
+            "public"
+          ],
+          "maxProperties": 3
+        }
+      },
+      "period": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "projectName",
+      "projectVersion",
+      "steps",
+      "period"
+    ],
+    "maxProperties": 4
+  }
+}
