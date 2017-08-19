@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openvillage')
-    .controller('ReportsCtrl', function ($scope, reportsService, SweetAlert, $state, uibDateParser) {
+    .controller('ReportsCtrl', function ($scope, reportsService, SweetAlert, $state) {
         $scope.periods = ['day', 'week', 'month', 'year'];
         $scope.format = 'yyyy/MM/dd';
         $scope.date = new Date();
