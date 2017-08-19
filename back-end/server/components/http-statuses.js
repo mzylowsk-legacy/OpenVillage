@@ -34,6 +34,11 @@ var projects = {
     NotExists: {status: 404, group: 'Projects', ID: 'NotExists'}
 };
 
+var reports = {
+    //success
+    OK: {status: 200, group: 'Reports', ID: 'OK'}
+};
+
 var scripts = {
     //success
     Created: {status: 201, group: 'Scripts', ID: 'Created'},
@@ -50,6 +55,7 @@ module.exports = {
     Auth: auth,
     Users: users,
     Projects: projects,
+    Reports: reports,
     Scripts: scripts,
     Builds: builds
 };
