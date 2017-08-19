@@ -25,7 +25,10 @@
                 <a ui-sref="index.profile"><i class="fa fa-user"></i> <span class="nav-label">Profile</span> </a>
             </li>
             <li ui-sref-active="active">
-                <a ui-sref="index.projects"><i class="fa fa-file-o"></i> <span class="nav-label">My projects</span> </a>
+                <a ui-sref="index.projects"><i class="fa fa-github"></i> <span class="nav-label">My projects</span> </a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="index.reports"><i class="fa fa-file-o"></i> <span class="nav-label">Reports</span> </a>
             </li>
             <li ui-sref-active="active" data-ng-show="$state.includes('index.projects.details') || $state.includes('index.projects.builds')">
                 <a ui-sref="index.projects.builds({name: $state.params.name})"><i class="fa fa-tasks"></i> <span class="nav-label">Builds logs</span></a>

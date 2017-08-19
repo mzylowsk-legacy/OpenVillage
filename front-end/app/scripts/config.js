@@ -57,6 +57,16 @@ function config($stateProvider, $urlRouterProvider, $loginProvider) {
                 saveState: false
             }
         })
+        .state('index.reports', {
+            url: '/reports',
+            templateUrl: 'views/reports.html',
+            controller: 'ReportsCtrl',
+            data: {
+                pageTitle: 'User reports',
+                requireLogin: true,
+                saveState: false
+            }
+        })
         .state('index.projects.new', {
             url: '/new',
             views: {
