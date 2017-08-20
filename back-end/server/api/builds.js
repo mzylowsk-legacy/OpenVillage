@@ -1,7 +1,6 @@
 'use strict';
 
 var projectsEntities = require('../entities/projects-entities'),
-    reportsEntities = require('../entities/reports-entities'),
     buildsEntities = require('../entities/builds-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
@@ -119,6 +118,20 @@ var getBuildsByProjectName = function (projectName, owner) {
     });
 };
 
+var getBuildsByProjectsName = function (projectNames, owner) {
+    return Q.Promise(function (resolve, reject) {
+        buildsEntities.findBuildsByProjectNameAndOwner(projectNames, owner)
+            .then(function (builds) {
+                logger.debug('Builds for %s project listed for user %s.', projectNames, owner);
+                resolve(builds);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+};
+
 var getZipPackage = function (projectName, commitSHA, owner) {
     return Q.Promise(function (resolve, reject) {
         projectsEntities.findProjectByNameAndOwner(projectName, owner, true)
@@ -138,5 +151,6 @@ module.exports = {
     runBuild: runBuild,
     getBuildByName: getBuildByName,
     getBuildsByProjectName: getBuildsByProjectName,
+    getBuildsByProjectsName: getBuildsByProjectsName,
     getZipPackage: getZipPackage
 };

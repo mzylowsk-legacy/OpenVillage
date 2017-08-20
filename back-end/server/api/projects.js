@@ -25,7 +25,7 @@ var addNewProject = function (projectEntity, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
