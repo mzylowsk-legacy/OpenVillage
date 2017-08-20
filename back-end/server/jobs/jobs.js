@@ -1,6 +1,7 @@
 'use strict';
 
 var mongo = require('mongoskin'),
+    httpStatuses = require('../components/http-statuses'),
     buildsEntities = require('../entities/builds-entities'),
     projectsEntities = require('../entities/projects-entities'),
     config = require('../config/config'),

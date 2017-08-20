@@ -10,7 +10,8 @@ var projectsEntities = require('../entities/projects-entities'),
     config = require('../config/config'),
     path = require('path'),
     Q = require('q'),
-    GitHub = require('octocat');
+    GitHub = require('octocat'),
+    Agenda = require('agenda');
 
 
 var addComandArg = function(argName, argValue, argsArray) {
@@ -134,16 +135,45 @@ var getZipPackage = function (projectName, commitSHA, owner) {
     });
 };
 
+var buildCronString = function (days, time) {
+    var cronString = '';
+
+    cronString  += time.getMinutes() + ' ' + time.getHours() + ' *  * ';
+    days.forEach(function (day) {
+        cronString += day.value + ',';
+    });
+    cronString = cronString.substring(0, cronString.length - 1) + ' *';
+
+    return cronString;
+};
+
 var setCronJob = function (buildEntity, owner) {
     return Q.Promise(function (resolve, reject) {
         projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
             .then(function (project) {
-                //TODO tu dokończyć ustawianie crona
+                var agenda = new Agenda({db: {address: config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.databaseName,
+                    collection: 'agenda'}, options: {ssl: true}}),
+                    cronName = 'cron-' + Date.now(),
+                    job;
+
+                agenda.define(cronName, function (job) {
+                    runBuild(job.attrs.data, owner);
+                    logger.debug('Job with build fired: ' + job + 'for project ' + project.name);
+                });
+
+                agenda.on('ready', function () {
+                    job = agenda.create(cronName, buildEntity);
+                    job.repeatEvery(buildCronString(buildEntity.days, new Date(buildEntity.time)));
+                    job.save();
+                    agenda.start();
+                });
+
+                resolve(httpStatuses.Builds.Croned);
             })
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 

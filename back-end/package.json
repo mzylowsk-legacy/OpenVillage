@@ -27,7 +27,7 @@
     "mkdirp": "0.5.1",
     "octocat": "1.1.0",
     "cron": "1.0.0",
-    "agenda": "^0.9.1"
+    "agenda": "1.0.0"
   },
   "devDependencies": {
     "grunt": "~0.4.4",

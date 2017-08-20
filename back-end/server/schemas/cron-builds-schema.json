@@ -35,16 +35,20 @@
           "maxProperties": 3
         }
       },
-      "period": {
-        "type": "string"
+      "days": {
+        "type": "array"
+      },
+      "time": {
+        "type": "datetime"
       }
     },
     "required": [
       "projectName",
       "projectVersion",
       "steps",
-      "period"
+      "days",
+      "time"
     ],
-    "maxProperties": 4
+    "maxProperties": 5
   }
 }

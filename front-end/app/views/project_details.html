@@ -127,12 +127,29 @@
                         </li>
                     </ul>
                     <div class="row m-t-sm" ng-show="selectedTasks.length!=0">
-                        <div class="col-lg-12">
-                            <div class="panel blank-panel ui-tab pull-right">
-                                <input type="button" class="btn btn-primary" ng-click="setCronJob()" value="Set Cron Job" ng-disabled="isProjectBuilding"/>
-                                <input type="button" class="btn btn-primary" ng-click="runBuild()" value="Run Build" ng-disabled="isProjectBuilding"/>
-                            </div>
-                        </div>
+                        <uib-tabset>
+                            <uib-tab heading="Single run">
+                                <div class="col-lg-12">
+                                    <div class="panel blank-panel ui-tab pull-right">
+                                        <input type="button" class="btn btn-primary" ng-click="runBuild()" value="Run Build" ng-disabled="isProjectBuilding"/>
+                                    </div>
+                                </div>
+                            </uib-tab>
+                            <uib-tab heading="Run periodically">
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10" ng-repeat="day in selectDays">
+                                        <input type="checkbox" id="{{day.name}}" value="{{day.value}}" ng-model="day.selected">
+                                        <label for="{{day.name}}">{{day.name}}</label>
+                                    </div>
+                                    <div class="col-lg-offset-2 col-lg-10" ng-init="updateCurrentTime()">
+                                        <p class="small">The build will be fired about {{cronTime | date: 'shortTime'}}</p>
+                                    </div>
+                                    <div class="panel blank-panel ui-tab pull-right">
+                                        <input type="button" class="btn btn-primary" ng-disabled="getCheckedDays().length == 0" ng-click="setCronJob()" value="Set Cron Job" ng-disabled="isProjectBuilding"/>
+                                    </div>
+                                </div>
+                            </uib-tab>
+                        </uib-tabset>
                     </div>
                 </div>
             </div>

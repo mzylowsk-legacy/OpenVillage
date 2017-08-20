@@ -47,7 +47,8 @@ var scripts = {
 
 var builds = {
     Triggered: {status: 202, group: 'Builds', ID: 'Triggered'},
-    NotExists: {status: 404, group: 'Builds', ID: 'NotExists'}
+    NotExists: {status: 404, group: 'Builds', ID: 'NotExists'},
+    Croned: {status: 200, group: 'Builds', ID: 'Created'}
 };
 
 module.exports = {
