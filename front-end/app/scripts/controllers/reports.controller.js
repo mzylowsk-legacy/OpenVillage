@@ -46,26 +46,8 @@ angular.module('openvillage')
             return count;
         };
 
-        /*$scope.getProjectsBuilds = function () {
-            angular.forEach($scope.selection, function (selectedProject) {
-                selectedProject.succeeded = 0;
-                selectedProject.failed = 0;
-                buildsService.getBuildsByProjectName(selectedProject.name)
-                    .then(function(res) {
-                        angular.forEach(res, function(build) {
-                            if (build.status_code === 0) {
-                                selectedProject.succeeded++;
-                            } else {
-                                selectedProject.failed++;
-                            }
-                        });
-                    });
-            });
-        };*/
-
         $scope.sendReport = function(isValid) {
             if (isValid) {
-                //$scope.getProjectsBuilds();
                 var reportData = {
                     numOfAllProjects: $scope.getAllProjectsNumber(),
                     numOfLatestProjects: $scope.getLatestProjectsNumber(),
