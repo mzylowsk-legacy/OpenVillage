@@ -22,7 +22,11 @@ var sendReport = function(newReport, owner) {
                         return build.projectName === p.name;
                     });
                     projectBuilds.forEach(function(build) {
-                        build.status_code === 0 ? succeededBuilds++ : failedBuilds++;
+                        if (build.status_code === 0) {
+                            succeededBuilds++;
+                        } else {
+                            failedBuilds++;
+                        }
                     });
                     selectedProjectDescription += p.name + ': builds succeeded - ' + succeededBuilds + ', failed - ' + failedBuilds + '\n';
                 });
