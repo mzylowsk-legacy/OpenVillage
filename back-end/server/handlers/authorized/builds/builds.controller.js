@@ -39,3 +39,23 @@ exports.getBuildsByProjectName = function (req, res) {
             res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
         });
 };
+
+exports.getBuildsByProjectsName = function (req, res) {
+    buildsManager.getBuildsByProjectsName(req.params.projectName, req.user.username)
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
+        });
+};
+
+exports.getZipPackage = function (req, res) {
+    buildsManager.getZipPackage(req.params.projectName, req.params.commitSHA, req.user.username)
+        .then (function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
+        });
+};

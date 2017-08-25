@@ -43,20 +43,14 @@
 
                                 <dt>Owner:</dt>
                                 <dd>{{projectDetails.owner}}</dd>
-                                <dt>Commits:</dt>
-                                <dd> 162</dd>
                                 <dt>URL:</dt>
                                 <dd><a href="{{projectDetails.url}}" class="text-navy"> {{projectDetails.url}}</a></dd>
                                 <dt>Is private:</dt>
                                 <dd>{{projectDetails.isPrivate}}</dd>
-                            </dl>
-                        </div>
-                        <div class="col-lg-7" id="cluster_info" ng-show="projectDetails.username">
-                            <dl class="dl-horizontal">
-                                <dt>Username:</dt>
-                                <dd>{{projectDetails.username}}</dd>
-                                <dt>Password:</dt>
-                                <dd> <span class="spoiler">{{projectDetails.password}}</span></dd>
+                                <div id="cluster_info" ng-show="projectDetails.username">
+                                    <dt>Username:</dt>
+                                    <dd>{{projectDetails.username}}</dd>
+                                </div>
                             </dl>
                         </div>
                     </div>
