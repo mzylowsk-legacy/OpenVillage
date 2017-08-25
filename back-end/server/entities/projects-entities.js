@@ -21,40 +21,9 @@ module.exports.addProject = function (project) {
 
 module.exports.findProjectByNameAndOwner = function (name, owner, shouldReturnPassword) {
     return Q.Promise(function (resolve, reject) {
-        db[collection].findOne({name: name, owner: owner}, function (err, result) {
+        db[collection].findOne({name: name, owner: owner}, shouldReturnPassword ? {} : {password: 0}, function (err, result) {
             if (!err) {
-                if(result) {
-                    var GitHub = require("octocat");
-                    var client;
-                    if(result.isPrivate == true) {
-                        client = new GitHub({
-                            username: result.username,
-                            password: result.password
-                        });
-                    }
-                    else{
-                        client = new GitHub();
-                    }
-                    var repoName = result.url.replace('https://github.com/', '');
-                    const repo = client.repo(repoName);
-                    repo.branches().then(function (Page) {
-
-                        var all = [];
-                        var nextP = Page;
-                        all = all.concat(nextP.list);
-                        while(Page.hasNext()){
-                            nextP = nextP.next();
-                            all = all.concat(nextP.list);
-                        }
-                        result.versions = all;
-                        if(!shouldReturnPassword)
-                            delete result.password;
-                        resolve(result);
-
-                    });
-                }
-                else
-                    resolve(result);
+                resolve(result);
             } else {
                 reject(err);
             }
