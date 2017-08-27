@@ -19,6 +19,7 @@ angular.module('openvillage')
         ];
 
         $scope.addProject = function (project) {
+            project.creationDate = new Date();
             projectsService.addNewProject(project)
                 .then(function () {
                     $scope.submitted = true;
@@ -26,7 +27,7 @@ angular.module('openvillage')
                     SweetAlert.swal({
                         title: 'Project created',
                         type: 'success',
-                        confirmButtonText: 'Back to list',
+                        confirmButtonText: 'Back to list'
                     }, function() {
                         $state.go('index.projects');
                     });

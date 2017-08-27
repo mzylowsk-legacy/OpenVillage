@@ -1,7 +1,6 @@
 'use strict';
 
 var projectsEntities = require('../entities/projects-entities'),
-    reportsEntities = require('../entities/reports-entities'),
     buildsEntities = require('../entities/builds-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
@@ -83,7 +82,7 @@ var runBuild = function (buildEntity, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -101,7 +100,7 @@ var getBuildByName = function (name, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -116,7 +115,21 @@ var getBuildsByProjectName = function (projectName, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
+            });
+    });
+};
+
+var getBuildsByProjectsName = function (projectNames, owner) {
+    return Q.Promise(function (resolve, reject) {
+        buildsEntities.findBuildsByProjectNameAndOwner(projectNames, owner)
+            .then(function (builds) {
+                logger.debug('Builds for %s project listed for user %s.', projectNames, owner);
+                resolve(builds);
             })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
     });
 };
 
@@ -131,7 +144,7 @@ var getZipPackage = function (projectName, commitSHA, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -182,5 +195,6 @@ module.exports = {
     setCronJob: setCronJob,
     getBuildByName: getBuildByName,
     getBuildsByProjectName: getBuildsByProjectName,
+    getBuildsByProjectsName: getBuildsByProjectsName,
     getZipPackage: getZipPackage
 };

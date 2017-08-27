@@ -1,8 +1,6 @@
 'use strict';
 
-var mongo = require('mongoskin'),
-    httpStatuses = require('../components/http-statuses'),
-    buildsEntities = require('../entities/builds-entities'),
+var buildsEntities = require('../entities/builds-entities'),
     projectsEntities = require('../entities/projects-entities'),
     config = require('../config/config'),
     logger = require('../lib/logger/logger').init(),
@@ -10,7 +8,7 @@ var mongo = require('mongoskin'),
     mailTools = require('../lib/utils/mailer-tools'),
     usersEntities = require('../entities/users-entities'),
     CronJob = require('cron').CronJob,
-    db = mongo.db(config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.databaseName, {native_parser: true});
+    httpStatuses = require('../components/http-statuses');
 
 var buildStatusNotifier = function() {
 
@@ -41,19 +39,19 @@ var buildStatusNotifier = function() {
                                 })
                                 .catch(function (err) {
                                     logger.error('Error: ' + utils.translateError(err));
-                                })
+                                });
                         })
                         .catch(function (err) {
                            logger.error('Error: ' + utils.translateError(err));
-                        })
-                })
+                        });
+                });
             } else {
                 utils.throwError(httpStatuses.Builds.NotExists);
             }
         })
         .catch(function (err) {
             logger.error('Error: ' + utils.translateError(err));
-        })
+        });
 }
 
 var cron = new CronJob('*/30 * * * * *', buildStatusNotifier, null, true, 'UTC');

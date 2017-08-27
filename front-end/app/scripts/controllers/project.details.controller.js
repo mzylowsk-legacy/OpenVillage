@@ -8,6 +8,7 @@ angular.module('openvillage')
         $scope.userName = $window.sessionStorage.sessionUsername;
         $scope.projectName = $stateParams.name;
         $scope.projectVersion = 'master';
+        $scope.versions = [{name:'master'}];
         $scope.projectStatusDetails = '';
         var buildWatcher = null;
         $scope.buildName = null;
