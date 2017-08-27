@@ -10,6 +10,7 @@
     - mongodb
     - mongodb-server
     - mongodb-clients
+    - pylint
 
 - name: run mongod service
   service:
