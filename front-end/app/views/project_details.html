@@ -74,7 +74,9 @@
                             <dl class="dl-horizontal">
                                 <dt>Project version:</dt>
                                 <dd>
-                                    <input type="text" placeholder="branch/commit" class="form-control input-sm" ng-model="projectVersion">
+                                    <select ng-model="projectVersion" class="form-control input-sm">
+                                        <option ng-repeat="x in projectDetails.versions" value="{{x.name}}">{{x.name}}</option>
+                                    </select>
                                 </dd>
                             </dl>
                         </div>

@@ -1,6 +1,7 @@
 'use strict';
 
 var projectsEntities = require('../entities/projects-entities'),
+    branchesEntities = require('../entities/branches-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
@@ -67,11 +68,22 @@ var getProjects = function (owner) {
 
 var getProject = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(name, owner, false)
+        projectsEntities.findProjectByNameAndOwner(name, owner, true)
             .then(function (project) {
                 if (project) {
                     logger.debug('Project for ' + owner + ' found.');
-                    resolve(project);
+                    branchesEntities.findAllBranchesForProject(project)
+                        .then(function(project)
+                        {
+                            logger.debug('Branches for ' + name + ' found.');
+                            project.password = 0;
+                            resolve(project);
+                        })
+                        .catch(function(err)
+                        {
+                            logger.error('Error: ' + utils.translateError(err));
+                            reject(err);
+                        })
                 } else {
                     utils.throwError(httpStatuses.Projects.NotExists);
                 }
