@@ -266,6 +266,13 @@ angular.module('openvillage')
             connectWith: '.connectList'
         };
 
+        $scope.setAsAutoScript = function(scriptName) {
+            projectsService.setAsAutoScript($scope.projectName, scriptName)
+                .then(function () {
+                    $window.location.reload();
+                });
+        };
+
         $scope.queueTask = function(taskName, isPublic) {
             SweetAlert.swal({
                 title: taskName,

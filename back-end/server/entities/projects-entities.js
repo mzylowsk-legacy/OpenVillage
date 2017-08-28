@@ -57,3 +57,28 @@ module.exports.findProjectsByOwner = function (owner) {
         });
     });
 };
+
+module.exports.findAllProjects = function () {
+    return Q.Promise(function (resolve, reject) {
+        db[collection].find().toArray(function (err, result) {
+            if (!err) {
+                resolve(result);
+            } else {
+                reject(err);
+            }
+        });
+    });
+};
+
+module.exports.setAsAutoScript = function (projectName, owner, scriptName) {
+    return Q.Promise(function (resolve, reject) {
+         db[collection].update({name: projectName, owner: owner}, {$set: {autoScript: scriptName}}, {strict: true},
+         function (err, result) {
+             if(!err) {
+                 resolve({scriptName: scriptName});
+             } else {
+                 reject(err);
+             }
+         });
+     });
+}

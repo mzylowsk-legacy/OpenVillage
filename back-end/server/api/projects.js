@@ -95,9 +95,27 @@ var getProject = function (name, owner) {
     });
 };
 
+var setAsAutoScript = function (projectName, owner, scriptName) {
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.setAsAutoScript(projectName, owner, scriptName)
+            .then(function (result) {
+                if (result) {
+                    resolve(result);
+                } else {
+                    utils.throwError(httpStatuses.Projects.NotExists);
+                }
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            })
+    });
+}
+
 module.exports = {
     addNewProject: addNewProject,
     deleteProject: deleteProject,
     getProjects: getProjects,
-    getProject: getProject
+    getProject: getProject,
+    setAsAutoScript: setAsAutoScript
 };
