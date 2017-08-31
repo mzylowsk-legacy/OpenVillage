@@ -56,7 +56,7 @@ var runBuild = function (buildEntity, owner) {
                                 if (buildEntity.steps[i].public) {
                                     scriptPath = path.join(constants.builder.commonScriptsPath, buildEntity.steps[i].scriptName + '.sh');
                                 } else {
-                                    scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', buildEntity.steps[i].scriptName + '.sh');
+                                    scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', project.name, buildEntity.steps[i].scriptName + '.sh');
                                 }
                                 if (buildEntity.steps[i].args) {
                                     addComandArg('--build-steps', '"bash ' + scriptPath + ' ' + buildEntity.steps[i].args + '"', args);

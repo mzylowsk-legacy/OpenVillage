@@ -15,27 +15,28 @@ function MainCtrl($scope, $window, projectsService, scriptsService, $state, Swee
 
     $scope.loadWidgets = function() {
         $scope.numberOfProjectsOwned = -1;
-        $scope.numberOfScripts = -1;
+        $scope.numberOfScripts = 0;
 
         projectsService.getList()
             .then(function (result) {
                 $scope.numberOfProjectsOwned = result.length;
-            }, function (err) {
-                SweetAlert.swal({
-                    title: 'Error occurred',
-                    type: 'error',
-                    text: JSON.stringify(err)
-                });
-            });
-
-        scriptsService.getList()
-            .then(function (result) {
-                $scope.numberOfScripts = result.scripts.length;
-            }, function (err) {
-                SweetAlert.swal({
-                    title: 'Error occurred',
-                    type: 'error',
-                    text: JSON.stringify(err)
+                angular.forEach(result, function (project) {
+                    scriptsService.getList(project.name)
+                        .then(function (result) {
+                            $scope.numberOfScripts += result.scripts.length;
+                        }, function (err) {
+                            SweetAlert.swal({
+                                title: 'Error occurred',
+                                type: 'error',
+                                text: JSON.stringify(err)
+                            });
+                        })
+                }, function (err) {
+                    SweetAlert.swal({
+                        title: 'Error occurred',
+                        type: 'error',
+                        text: JSON.stringify(err)
+                    });
                 });
             });
     };
