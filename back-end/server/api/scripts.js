@@ -7,11 +7,11 @@ var scriptsFileEntities = require('../entities/scripts-file-entities'),
     Q = require('q');
 
 
-var addNewScript = function (scriptEntity, owner) {
+var addNewScript = function (scriptEntity, owner, project) {
     return Q.Promise(function (resolve, reject) {
-        scriptsFileEntities.saveScript(scriptEntity.name, scriptEntity.code, owner)
+        scriptsFileEntities.saveScript(scriptEntity.name, scriptEntity.code, owner, project)
             .then(function () {
-                logger.debug('Script %s has been saved in %s catalog.', scriptEntity.name, owner);
+                logger.debug('Script %s has been saved in %s catalog.', scriptEntity.name, owner + '/' + project);
                 resolve(httpStatuses.Scripts.Created);
             })
             .catch(function (err) {
@@ -21,12 +21,12 @@ var addNewScript = function (scriptEntity, owner) {
     });
 };
 
-var deleteScript = function (name, owner) {
+var deleteScript = function (projectName, name, owner) {
     return Q.Promise(function (resolve, reject) {
-        scriptsFileEntities.isExistingScript(name, owner)
+        scriptsFileEntities.isExistingScript(projectName, name, owner)
             .then(function () {
                 logger.debug('Script %s has been found.', name);
-                return scriptsFileEntities.deleteScript(name, owner);
+                return scriptsFileEntities.deleteScript(projectName, name, owner);
             })
             .then(function () {
                 logger.debug('Script %s has been deleted.', name);
@@ -39,9 +39,9 @@ var deleteScript = function (name, owner) {
     });
 };
 
-var getAllScripts = function (owner) {
+var getAllScripts = function (owner, project) {
     return Q.Promise(function (resolve, reject) {
-        scriptsFileEntities.getAllScripts(owner)
+        scriptsFileEntities.getAllScripts(owner, project)
             .then(function (scripts) {
                 logger.debug('Scripts for %s listed.', owner);
                 resolve(scripts);
@@ -68,12 +68,12 @@ var getDefaultScripts = function () {
     });
 };
 
-var getScriptContent = function (name, owner) {
+var getScriptContent = function (projectName, name, owner) {
     return Q.Promise(function (resolve, reject) {
-        scriptsFileEntities.isExistingScript(name, owner)
+        scriptsFileEntities.isExistingScript(projectName, name, owner)
             .then(function () {
                 logger.debug('Script %s has been found', name);
-                return scriptsFileEntities.getScriptContent(name, owner);
+                return scriptsFileEntities.getScriptContent(projectName, name, owner);
             })
             .then(function (content) {
                 logger.debug('Script for %s has been sent.', owner);

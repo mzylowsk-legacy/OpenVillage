@@ -64,9 +64,9 @@ angular.module('openvillage')
             });
         };
 
-        this.deleteScript = function (scriptName) {
+        this.deleteScript = function (projectName, scriptName) {
             return $q(function (resolve, reject) {
-                $http.delete(SERVER_URL + '/auth/api/scripts/delete/' + scriptName)
+                $http.delete(SERVER_URL + '/auth/api/scripts/delete/' + projectName + '/' + scriptName)
                     .success(function (data) {
                         resolve(data);
                     })
