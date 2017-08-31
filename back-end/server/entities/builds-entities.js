@@ -32,6 +32,19 @@ module.exports.findBuildsByProjectNameAndOwner = function (projectName, owner) {
     });
 };
 
+module.exports.findBuildsByProjectNamesAndOwner = function (projectNames, owner) {
+    return Q.Promise(function (resolve, reject) {
+        db[collection].find({projectName: {$in: projectNames}, owner: owner}).sort({timestamp: -1})
+            .toArray(function (err, result) {
+                if (!err) {
+                    resolve(result);
+                } else {
+                    reject(err);
+                }
+            });
+    });
+};
+
 module.exports.findFailedBuildsWithMailNotSent = function () {
     return Q.Promise(function (resolve, reject) {
          db[collection].find({isEmailSent: false, status_code: 1})
@@ -53,6 +66,19 @@ module.exports.updateInfoAboutEmailSent = function (build) {
             } else {
                 reject(err);
             }
+        });
+    });
+};
+
+module.exports.findBuildWithCommitSha = function (projectName, owner, commitSha) {
+    return Q.Promise(function (resolve, reject) {
+        db[collection].find({commit_sha: commitSha, projectName: projectName, owner: owner})
+            .toArray(function (err, result) {
+                if(!err) {
+                    resolve(result);
+                } else {
+                    reject(err);
+                }
         });
     });
 };

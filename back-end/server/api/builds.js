@@ -9,7 +9,8 @@ var projectsEntities = require('../entities/projects-entities'),
     config = require('../config/config'),
     path = require('path'),
     Q = require('q'),
-    GitHub = require('octocat');
+    GitHub = require('octocat'),
+    Agenda = require('agenda');
 
 
 var addComandArg = function(argName, argValue, argsArray) {
@@ -81,7 +82,7 @@ var runBuild = function (buildEntity, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -99,7 +100,7 @@ var getBuildByName = function (name, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -114,7 +115,21 @@ var getBuildsByProjectName = function (projectName, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
+            });
+    });
+};
+
+var getBuildsByProjectsName = function (projectNames, owner) {
+    return Q.Promise(function (resolve, reject) {
+        buildsEntities.findBuildsByProjectNameAndOwner(projectNames, owner)
+            .then(function (builds) {
+                logger.debug('Builds for %s project listed for user %s.', projectNames, owner);
+                resolve(builds);
             })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
     });
 };
 
@@ -129,13 +144,57 @@ var getZipPackage = function (projectName, commitSHA, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
+            });
+    });
+};
+
+var buildCronString = function (days, time) {
+    var cronString = '';
+
+    cronString  += time.getMinutes() + ' ' + time.getHours() + ' *  * ';
+    days.forEach(function (day) {
+        cronString += day.value + ',';
+    });
+    cronString = cronString.substring(0, cronString.length - 1) + ' *';
+
+    return cronString;
+};
+
+var setCronJob = function (buildEntity, owner) {
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
+            .then(function (project) {
+                var agenda = new Agenda({db: {address: config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.databaseName,
+                    collection: 'agenda'}, options: {ssl: true}}),
+                    cronName = 'cron-' + Date.now(),
+                    job;
+
+                agenda.define(cronName, function (job) {
+                    runBuild(job.attrs.data, owner);
+                    logger.debug('Job with build fired: ' + job + 'for project ' + project.name);
+                });
+
+                agenda.on('ready', function () {
+                    job = agenda.create(cronName, buildEntity);
+                    job.repeatEvery(buildCronString(buildEntity.days, new Date(buildEntity.time)));
+                    job.save();
+                    agenda.start();
+                });
+
+                resolve(httpStatuses.Builds.Croned);
             })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
     });
 };
 
 module.exports = {
     runBuild: runBuild,
+    setCronJob: setCronJob,
     getBuildByName: getBuildByName,
     getBuildsByProjectName: getBuildsByProjectName,
+    getBuildsByProjectsName: getBuildsByProjectsName,
     getZipPackage: getZipPackage
 };

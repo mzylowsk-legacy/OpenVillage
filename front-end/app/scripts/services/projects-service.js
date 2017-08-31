@@ -53,4 +53,16 @@ angular.module('openvillage')
             });
         };
 
+        this.setAsAutoScript = function (projectName, scriptName) {
+            return $q(function (resolve, reject) {
+                $http.put(SERVER_URL + '/auth/api/projects/' + projectName + '/autoScript', {scriptName: scriptName})
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
+
     });

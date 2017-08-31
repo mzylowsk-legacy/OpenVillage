@@ -8,12 +8,22 @@ angular.module('openvillage')
         $scope.userName = $window.sessionStorage.sessionUsername;
         $scope.projectName = $stateParams.name;
         $scope.projectVersion = 'master';
+        $scope.versions = [{name:'master'}];
         $scope.projectStatusDetails = '';
         var buildWatcher = null;
         $scope.buildName = null;
         $scope.isProjectBuilding = false;
         $scope.projectStatus = -1; // 2-during,0-ok,1-error
         $scope.selectedTasks = [];
+        $scope.selectDays = [
+            {name: 'Monday', value: 1, selected: false},
+            {name: 'Tuesday', value: 2, selected: false},
+            {name: 'Wednesday', value: 3, selected: false},
+            {name: 'Thursday', value: 4, selected: false},
+            {name: 'Friday', value: 5, selected: false},
+            {name: 'Saturday', value: 6, selected: false},
+            {name: 'Sunday', value: 7, selected: false}];
+        $scope.cronTime = new Date();
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withOption('bFilter', false)
@@ -177,6 +187,45 @@ angular.module('openvillage')
                 });
         };
 
+        $scope.setCronJob = function () {
+            var body = {
+                'projectVersion': $scope.projectVersion,
+                'projectName': $scope.projectName,
+                'steps': $scope.selectedTasks,
+                'days': $scope.getCheckedDays(),
+                'time': $scope.cronTime
+            };
+
+            buildsService.setCronJob(body)
+                .then(function (res) {
+                    console.log(res);
+                    SweetAlert.swal({
+                        title: 'Cron build saved!',
+                        type: 'success',
+                        text: 'Cron saved successfully'
+                    });
+                }, function (err) {
+                    console.log(err);
+                    SweetAlert.swal({
+                        title: 'Error occurred',
+                        type: 'error',
+                        text: JSON.stringify(err)
+                    });
+                });
+        };
+
+        $scope.updateCurrentTime = function () {
+            $interval(function() {
+                $scope.cronTime = new Date();
+            }, 1000);
+        };
+
+        $scope.getCheckedDays = function () {
+            return $scope.selectDays.filter(function (day) {
+                return day.selected;
+            });
+        };
+
         $scope.stopWatchingBuild = function() {
             if (angular.isDefined(buildWatcher)) {
                 $interval.cancel(buildWatcher);
@@ -215,6 +264,13 @@ angular.module('openvillage')
 
         $scope.sortableOptions = {
             connectWith: '.connectList'
+        };
+
+        $scope.setAsAutoScript = function(scriptName) {
+            projectsService.setAsAutoScript($scope.projectName, scriptName)
+                .then(function () {
+                    $window.location.reload();
+                });
         };
 
         $scope.queueTask = function(taskName, isPublic) {

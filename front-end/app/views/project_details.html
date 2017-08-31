@@ -43,12 +43,12 @@
 
                                 <dt>Owner:</dt>
                                 <dd>{{projectDetails.owner}}</dd>
-                                <dt>Commits:</dt>
-                                <dd> 162</dd>
                                 <dt>URL:</dt>
                                 <dd><a href="{{projectDetails.url}}" class="text-navy"> {{projectDetails.url}}</a></dd>
                                 <dt>Is private:</dt>
                                 <dd>{{projectDetails.isPrivate}}</dd>
+                                <dt>Auto script:</dt>
+                                <dd>{{projectDetails.autoScript}}</dd>
                                 <div id="cluster_info" ng-show="projectDetails.username">
                                     <dt>Username:</dt>
                                     <dd>{{projectDetails.username}}</dd>
@@ -76,7 +76,9 @@
                             <dl class="dl-horizontal">
                                 <dt>Project version:</dt>
                                 <dd>
-                                    <input type="text" placeholder="branch/commit" class="form-control input-sm" ng-model="projectVersion">
+                                    <select ng-model="projectVersion" class="form-control input-sm">
+                                        <option ng-repeat="x in projectDetails.versions" value="{{x.name}}">{{x.name}}</option>
+                                    </select>
                                 </dd>
                             </dl>
                         </div>
@@ -129,11 +131,29 @@
                         </li>
                     </ul>
                     <div class="row m-t-sm" ng-show="selectedTasks.length!=0">
-                        <div class="col-lg-12">
-                            <div class="panel blank-panel ui-tab pull-right">
-                                <input type="button" class="btn btn-primary" ng-click="runBuild()" value="Run Build" ng-disabled="isProjectBuilding"/>
-                            </div>
-                        </div>
+                        <uib-tabset>
+                            <uib-tab heading="Single run">
+                                <div class="col-lg-12">
+                                    <div class="panel blank-panel ui-tab pull-right">
+                                        <input type="button" class="btn btn-primary" ng-click="runBuild()" value="Run Build" ng-disabled="isProjectBuilding"/>
+                                    </div>
+                                </div>
+                            </uib-tab>
+                            <uib-tab heading="Run periodically">
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10" ng-repeat="day in selectDays">
+                                        <input type="checkbox" id="{{day.name}}" value="{{day.value}}" ng-model="day.selected">
+                                        <label for="{{day.name}}">{{day.name}}</label>
+                                    </div>
+                                    <div class="col-lg-offset-2 col-lg-10" ng-init="updateCurrentTime()">
+                                        <p class="small">The build will be fired about {{cronTime | date: 'shortTime'}}</p>
+                                    </div>
+                                    <div class="panel blank-panel ui-tab pull-right">
+                                        <input type="button" class="btn btn-primary" ng-disabled="getCheckedDays().length == 0" ng-click="setCronJob()" value="Set Cron Job" ng-disabled="isProjectBuilding"/>
+                                    </div>
+                                </div>
+                            </uib-tab>
+                        </uib-tabset>
                     </div>
                 </div>
             </div>
@@ -174,6 +194,8 @@
                                 </td>
                                 <td class="project-actions">
                                     <a class="btn btn-success btn-sm" ng-click="queueTask(s.name, false)"><i class="fa fa-tasks"></i> Add to queue </a>
+                                    <a class="btn btn-warning btn-sm" ng-if="s.name === projectDetails.autoScript" ng-click="setAsAutoScript('')"><i class="fa fa-tasks"></i> Unset auto script </a>
+                                    <a class="btn btn-warning btn-sm" ng-if="s.name !== projectDetails.autoScript" ng-click="setAsAutoScript(s.name)"><i class="fa fa-tasks"></i> Set as auto script </a>
                                     <a ui-sref="index.projects.scripts.edit({name: projectName, scriptName: s.name})" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i> Edit </a>
                                     <a href="" class="btn btn-danger btn-sm" ng-click="deleteScript(projectName, s.name, $index)"><i class="fa fa-trash"></i> Delete </a>
                                 </td>
