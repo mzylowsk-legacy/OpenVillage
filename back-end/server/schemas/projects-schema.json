@@ -22,6 +22,9 @@
       "name": {
         "type": "string",
         "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_\\.]+$"
+      },
+      "creationDate": {
+        "type": "datetime"
       }
     },
     "required": [
@@ -31,6 +34,6 @@
       "name"
     ],
     "minProperties": 4,
-    "maxProperties": 6
+    "maxProperties": 7
   }
 }
