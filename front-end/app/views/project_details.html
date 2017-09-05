@@ -17,13 +17,13 @@
 <div class="row">
 
     <div class="col-lg-9">
-        <div class="wrapper wrapper-content animated fadeInRight" style="padding: 20px 10px 0px; !important;" ng-init="getProjectDetails()">
+        <div class="wrapper wrapper-content animated fadeInRight" style="padding: 20px 10px 0px; !important;" ng-init="getProjectDetailsWithBranches()">
             <div class="ibox">
                 <div class="ibox-content">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="m-b-md">
-                                <a href="" class="btn btn-white btn-xs pull-right">Edit project</a>
+                                <a ui-sref="index.projects.edit({name: projectName})" class="btn btn-white btn-xs pull-right">Edit project</a>
 
                                 <h2>{{projectName}}</h2>
                             </div>

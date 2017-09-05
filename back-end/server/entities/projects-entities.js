@@ -75,6 +75,18 @@ module.exports.findAllProjects = function () {
     });
 };
 
+module.exports.editProject = function (projectName, project, owner) {
+    return Q.Promise(function (resolve, reject) {
+        db[collection].update({name: projectName, owner: owner}, {$set: project}, function (err, result) {
+            if (!err) {
+                resolve(result);
+            } else {
+                reject(err);
+            }
+        });
+    });
+};
+
 module.exports.setAsAutoScript = function (projectName, owner, scriptName) {
     return Q.Promise(function (resolve, reject) {
          db[collection].update({name: projectName, owner: owner}, {$set: {autoScript: scriptName}}, {strict: true},
