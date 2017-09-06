@@ -111,7 +111,7 @@ function config($stateProvider, $urlRouterProvider, $loginProvider) {
         })
         .state('index.projects.scripts', {
             url: '/{name}/scripts',
-            abstract: true,
+            abstract: true
         })
         .state('index.projects.scripts.new', {
             url: '/new',
