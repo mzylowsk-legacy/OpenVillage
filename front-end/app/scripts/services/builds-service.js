@@ -100,5 +100,28 @@ angular.module('openvillage')
             });
         };
 
+        this.getCronJobs = function (projectName) {
+            return $q(function (resolve, reject) {
+                $http.get(SERVER_URL + '/auth/api/builds/cron/' + projectName)
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
+
+        this.deleteCronJob = function (cronName) {
+            return $q(function (resolve, reject) {
+                $http.delete(SERVER_URL + '/auth/api/builds/cron/' + cronName)
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
 
     });
