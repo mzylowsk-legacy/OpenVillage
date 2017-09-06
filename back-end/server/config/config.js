@@ -6,21 +6,21 @@ module.exports.loggerConf = {
 };
 
 module.exports.emailProvider = {
-    host: 'smtp.gmail.com',
-    from: 'OpenVillage openvillagemr@gmail.com',
+    host: '<host>',
+    from: 'OpenVillage <email>',
     port: 465,
     secure: true,
-    username: 'openvillagemr',
-    password: '12345678mr'
+    username: '<username>',
+    password: '<password>'
 };
 
 module.exports.auth = {
     expirationTokenTime: '5h',
-    key: 'marta'
+    key: '<key>'
 };
 
 module.exports.environment = {
-    host: 'http://localhost:8080'
+    host: '<protocol>:<address>:<port>'
 };
 
 module.exports.mongodb = {
