@@ -36,22 +36,24 @@ angular.module('openvillage')
           return $scope.projects.length;
         };
 
-        $scope.getLatestProjectsNumber = function() {
+        $scope.getLatestProjectsInfo = function() {
             var count = 0;
+            var info = '';
             angular.forEach($scope.projects, function(project) {
                 var creationDate = new Date(project.creationDate);
                 if (creationDate !== undefined && creationDate.getTime() > $scope.date.getTime()) {
                     count++;
+                    info += project.name + '; ';
                 }
             });
-            return count;
+            return count + ': ' + info;
         };
 
         $scope.sendReport = function(isValid) {
             if (isValid) {
                 var reportData = {
                     numOfAllProjects: $scope.getAllProjectsNumber(),
-                    numOfLatestProjects: $scope.getLatestProjectsNumber(),
+                    latestProjectsInfo: $scope.getLatestProjectsInfo(),
                     selectedDate: $scope.date,
                     selectedProjects: $scope.selection,
                     email: $scope.email

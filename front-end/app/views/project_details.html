@@ -197,7 +197,7 @@
                                     <a class="btn btn-warning btn-sm" ng-if="s.name === projectDetails.autoScript" ng-click="setAsAutoScript('')"><i class="fa fa-tasks"></i> Unset auto script </a>
                                     <a class="btn btn-warning btn-sm" ng-if="s.name !== projectDetails.autoScript" ng-click="setAsAutoScript(s.name)"><i class="fa fa-tasks"></i> Set as auto script </a>
                                     <a ui-sref="index.projects.scripts.edit({name: projectName, scriptName: s.name})" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i> Edit </a>
-                                    <a href="" class="btn btn-danger btn-sm" ng-click="deleteScript(s.name, $index)"><i class="fa fa-trash"></i> Delete </a>
+                                    <a href="" class="btn btn-danger btn-sm" ng-click="deleteScript(projectName, s.name, $index)"><i class="fa fa-trash"></i> Delete </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -234,6 +234,51 @@
                                 <td class="project-actions">
                                     <a class="btn btn-primary btn-sm" ng-click="queueTask(s.name, true)"><i class="fa fa-tasks"></i> Add to queue </a>
                                 </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12" ng-init="getCronJobs()">
+        <div class="wrapper wrapper-content animated fadeInRight">
+
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>Saved cyclical builds</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="project-list">
+                        <table class="table table-hover" datatable="ng" dt-options="dtOptionsPublicScripts" dt-column-defs="dtColumnDefsPublicScripts">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Branch</th>
+                                <th>Creation date</th>
+                                <th>Days</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr ng-repeat="cronJob in cronJobs">
+                                <td class="project-title">
+                                    <span>{{cronJob.name}}</span>
+                                </td>
+                                <td class="project-title">
+                                    <span>{{cronJob.data.projectVersion}}</span>
+                                </td>
+                                <td class="project-title">
+                                    <span>{{cronJob.data.time}}</span>
+                                </td>
+                                <td class="project-title">
+                                    <span>{{cronJob.data.days}}</span>
+                                </td>
+                                <td class="project-actions">
+                                    <a href="" class="btn btn-danger btn-sm" ng-click="deleteCronJob(cronJob.name)"><i class="fa fa-trash"></i> Delete </a>                                    </td>
                             </tr>
                             </tbody>
                         </table>
