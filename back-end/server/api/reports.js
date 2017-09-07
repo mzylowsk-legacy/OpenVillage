@@ -15,6 +15,9 @@ var sendReport = function(newReport, owner) {
             }), owner)
             .then(function (builds) {
                 var selectedProjectDescription = '';
+                if (newReport.selectedProjects.length > 0) {
+                    selectedProjectDescription += '\n\nInformation about builds:\n';
+                }
                 newReport.selectedProjects.forEach(function(p) {
                     var succeededBuilds = 0,
                         failedBuilds = 0;
@@ -42,7 +45,7 @@ var sendReport = function(newReport, owner) {
                     'Report from OpenVillage',
                     'Number of all projects: ' + newReport.numOfAllProjects +
                     '\nNumber of projects added after date ' + newReport.selectedDate.substring(0,10) + ': ' + newReport.latestProjectsInfo +
-                    '\n\nInformation about builds:\n' + selectedProjectDescription);
+                    selectedProjectDescription);
                 resolve();
             })
             .catch(function (err) {

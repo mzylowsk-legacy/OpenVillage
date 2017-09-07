@@ -2,12 +2,21 @@
 
 angular.module('openvillage')
 
-    .controller('ReportsCtrl', function ($scope, reportsService, projectsService, buildsService, SweetAlert, $state) { 
+    .controller('ReportsCtrl', function ($scope, $window, usersService, reportsService, projectsService, buildsService, SweetAlert, $state) {
         $scope.periods = ['day', 'week', 'month', 'year'];
         $scope.format = 'yyyy/MM/dd';
         $scope.date = new Date();
         $scope.maxDate = Date.now();
         $scope.selection = [];
+
+        $scope.getCurrentUserEmail = function () {
+            usersService.getUserProfile($window.sessionStorage.sessionUsername)
+                .then(function (res) {
+                   $scope.email = res.email;
+                }, function (err) {
+                    console.log(err);
+                });
+        };
 
         $scope.toggleSelection = function toggleSelection(p) {
             var idx = $scope.selection.indexOf(p);
