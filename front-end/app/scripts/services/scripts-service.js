@@ -5,9 +5,9 @@ angular.module('openvillage')
 
         var SERVER_URL = 'http://localhost:8080';
 
-        this.getList = function () {
+        this.getList = function (projectName) {
             return $q(function (resolve, reject) {
-                $http.get(SERVER_URL + '/auth/api/scripts/list')
+                $http.get(SERVER_URL + '/auth/api/scripts/list/' + projectName)
                     .success(function (data) {
                         resolve(data);
                     })
@@ -29,9 +29,9 @@ angular.module('openvillage')
             });
         };
 
-        this.getScriptContent = function (scriptName) {
+        this.getScriptContent = function (scriptName, projectName) {
             return $q(function (resolve, reject) {
-                $http.get(SERVER_URL + '/auth/api/scripts/content/' + scriptName)
+                $http.get(SERVER_URL + '/auth/api/scripts/content/' + projectName + '/' + scriptName)
                     .success(function (data) {
                         resolve(data);
                     })
@@ -41,9 +41,9 @@ angular.module('openvillage')
             });
         };
 
-        this.addNewScript = function (script) {
+        this.addNewScript = function (script, projectName) {
             return $q(function (resolve, reject) {
-                $http.post(SERVER_URL + '/auth/api/scripts/add', script)
+                $http.post(SERVER_URL + '/auth/api/scripts/add/' + projectName, script)
                     .success(function (data) {
                         resolve(data);
                     })
@@ -53,9 +53,9 @@ angular.module('openvillage')
             });
         };
 
-        this.deleteScript = function (scriptName) {
+        this.deleteScript = function (projectName, scriptName) {
             return $q(function (resolve, reject) {
-                $http.delete(SERVER_URL + '/auth/api/scripts/delete/' + scriptName)
+                $http.delete(SERVER_URL + '/auth/api/scripts/delete/' + projectName + '/' + scriptName)
                     .success(function (data) {
                         resolve(data);
                     })
@@ -65,9 +65,9 @@ angular.module('openvillage')
             });
         };
 
-        this.editScript = function (script) {
+        this.editScript = function (projectName, script) {
             return $q(function (resolve, reject) {
-                $http.put(SERVER_URL + '/auth/api/scripts/edit', script)
+                $http.put(SERVER_URL + '/auth/api/scripts/edit/' + projectName, script)
                     .success(function (data) {
                         resolve(data);
                     })

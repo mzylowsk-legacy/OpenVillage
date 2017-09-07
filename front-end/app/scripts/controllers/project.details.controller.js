@@ -60,7 +60,7 @@ angular.module('openvillage')
         };
 
         $scope.getScriptsList = function() {
-            scriptsService.getList()
+            scriptsService.getList($scope.projectName)
                 .then(function(res) {
                     $scope.scripts = res.scripts;
                     scriptsService.getDefaultList()
@@ -85,7 +85,7 @@ angular.module('openvillage')
                 });
         };
 
-        $scope.deleteScript = function(scriptName, index) {
+        $scope.deleteScript = function(projectName, scriptName, index) {
             SweetAlert.swal({
                 title: 'Are you sure?',
                 text: 'You will not be able to recover this script!',
@@ -99,7 +99,7 @@ angular.module('openvillage')
                     return;
                 }
 
-                scriptsService.deleteScript(scriptName)
+                scriptsService.deleteScript(projectName, scriptName)
                     .then(function() {
                         $scope.scripts.splice(index, 1);
                         SweetAlert.swal({
