@@ -21,21 +21,27 @@ var sendReport = function(newReport, owner) {
                     var projectBuilds = builds.filter(function(build) {
                         return build.projectName === p.name;
                     });
+                    var buildsInfo = '';
                     projectBuilds.forEach(function(build) {
                         if (build.status_code === 0) {
                             succeededBuilds++;
                         } else {
                             failedBuilds++;
                         }
+                        buildsInfo += 'Name: ' + build.buildName + ', status code: ' + build.status_code + ', branch: ' + build.projectVersion + '\n';
                     });
-                    selectedProjectDescription += p.name + ': builds succeeded - ' + succeededBuilds + ', failed - ' + failedBuilds + '\n';
+                    selectedProjectDescription += '* ' + p.name + ': builds succeeded - ' + succeededBuilds + ', failed - ' + failedBuilds + '\n';
+                    if (buildsInfo.length > 0) {
+                        selectedProjectDescription += buildsInfo;
+                    }
+                    selectedProjectDescription += '\n\n';
                 });
 
                 mailTools.sendEmail(
                     newReport.email,
                     'Report from OpenVillage',
                     'Number of all projects: ' + newReport.numOfAllProjects +
-                    '\nNumber of projects added after date ' + newReport.selectedDate.substring(0,10) + ': ' + newReport.numOfLatestProjects +
+                    '\nNumber of projects added after date ' + newReport.selectedDate.substring(0,10) + ': ' + newReport.latestProjectsInfo +
                     '\n\nInformation about builds:\n' + selectedProjectDescription);
                 resolve();
             })

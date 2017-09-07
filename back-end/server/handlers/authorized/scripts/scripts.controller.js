@@ -12,7 +12,7 @@ var addNewScript = function (req, res) {
         res.status(400).send(errors);
         return;
     }
-    scriptsManager.addNewScript(req.body, req.user.username)
+    scriptsManager.addNewScript(req.body, req.user.username, req.params.projectName)
         .then(function (result) {
             res.send(result);
         })
@@ -26,7 +26,7 @@ exports.addNewScript = addNewScript;
 exports.editScript = addNewScript;
 
 exports.deleteScript = function (req, res) {
-    scriptsManager.deleteScript(req.params.name, req.user.username)
+    scriptsManager.deleteScript(req.params.projectName, req.params.name, req.user.username)
         .then(function (result) {
             res.send(result);
         })
@@ -36,7 +36,7 @@ exports.deleteScript = function (req, res) {
 };
 
 exports.getAllScripts = function (req, res) {
-    scriptsManager.getAllScripts(req.user.username)
+    scriptsManager.getAllScripts(req.user.username, req.params.projectName)
         .then(function (result) {
             res.send(result);
         })
@@ -57,7 +57,7 @@ exports.getDefaultScripts = function (req, res) {
 };
 
 exports.getScriptContent = function (req, res) {
-    scriptsManager.getScriptContent(req.params.name, req.user.username)
+    scriptsManager.getScriptContent(req.params.projectName, req.params.name, req.user.username)
         .then(function (result) {
             res.send(result);
         })
