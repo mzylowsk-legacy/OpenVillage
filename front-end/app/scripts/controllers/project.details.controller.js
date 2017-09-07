@@ -324,4 +324,60 @@ angular.module('openvillage')
             });
         };
 
+        $scope.getCronJobs = function () {
+            buildsService.getCronJobs($scope.projectName)
+                .then(function (res) {
+                    res.forEach(function (cronJob) {
+                        cronJob.data.days = cronJob.data.days.map(function (day) {
+                            return day.name;
+                        });
+                        cronJob.data.time = new Date(cronJob.data.time).toTimeString();
+                    });
+                    $scope.cronJobs = res;
+                }, function (err) {
+                    console.log(err);
+                    SweetAlert.swal({
+                        title: 'Getting of cron jobs failed',
+                        type: 'error',
+                        text: JSON.stringify(err)
+                    });
+                });
+        };
+
+        $scope.deleteCronJob = function (cronName) {
+            SweetAlert.swal({
+                title: 'Are you sure?',
+                text: 'You will remove this cron job',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Yes, delete it!',
+                closeOnConfirm: false
+            }, function(isConfirm) {
+                if(!isConfirm) {
+                    return;
+                }
+
+                buildsService.deleteCronJob(cronName)
+                    .then(function (res) {
+                        $scope.cronJobs = $scope.cronJobs.filter(function (cronJob) {
+                            return cronJob.name !== cronName;
+                        });
+                        console.log('Cron job deleted with status: ' + res.status);
+                        SweetAlert.swal({
+                            title: 'Deleted!',
+                            text: 'Cron job has been deleted.',
+                            type: 'success'
+                        });
+                    }, function (err) {
+                        console.log(err);
+                        SweetAlert.swal({
+                            title: 'Getting of cron jobs failed',
+                            type: 'error',
+                            text: JSON.stringify(err)
+                        });
+                    });
+            });
+        };
+
     });

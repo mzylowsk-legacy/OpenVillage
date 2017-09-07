@@ -2,6 +2,7 @@
 
 var projectsEntities = require('../entities/projects-entities'),
     buildsEntities = require('../entities/builds-entities'),
+    agendaEntities = require('../entities/agenda-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
@@ -162,27 +163,50 @@ var buildCronString = function (days, time) {
 };
 
 var setCronJob = function (buildEntity, owner) {
+    return Q.Promise(function (resolve) {
+        var agenda = new Agenda({db: {address: config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.databaseName,
+            collection: 'agenda'}, options: {ssl: true}}),
+            cronName = 'cron-' + Date.now(),
+            job;
+
+        buildEntity.owner = owner;
+
+        agenda.define(cronName, function (job) {
+            runBuild(job.attrs.data, owner);
+            logger.debug('Job with build fired: ' + job + 'for project ' + project.name);
+        });
+
+        agenda.on('ready', function () {
+            job = agenda.create(cronName, buildEntity);
+            job.repeatEvery(buildCronString(buildEntity.days, new Date(buildEntity.time)));
+            job.save();
+            agenda.start();
+        });
+
+        resolve(httpStatuses.Builds.Croned);
+    });
+};
+
+var getCronJobs = function (projectName, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
-            .then(function (project) {
-                var agenda = new Agenda({db: {address: config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.databaseName,
-                    collection: 'agenda'}, options: {ssl: true}}),
-                    cronName = 'cron-' + Date.now(),
-                    job;
+        agendaEntities.getAgendaCrons(projectName, owner, true)
+            .then(function (crons) {
+                logger.debug('Agenda crons for project %s fetched from the database.', projectName);
+                resolve(crons);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
+    });
+};
 
-                agenda.define(cronName, function (job) {
-                    runBuild(job.attrs.data, owner);
-                    logger.debug('Job with build fired: ' + job + 'for project ' + project.name);
-                });
-
-                agenda.on('ready', function () {
-                    job = agenda.create(cronName, buildEntity);
-                    job.repeatEvery(buildCronString(buildEntity.days, new Date(buildEntity.time)));
-                    job.save();
-                    agenda.start();
-                });
-
-                resolve(httpStatuses.Builds.Croned);
+var deleteCronJob = function (cronName, owner) {
+    return Q.Promise(function (resolve, reject) {
+        agendaEntities.deleteAgendaCrons(cronName, owner, true)
+            .then(function (crons) {
+                logger.debug('Agenda cron for project %s has been deleted.', cronName);
+                resolve(httpStatuses.Builds.Removed);
             })
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
@@ -197,5 +221,7 @@ module.exports = {
     getBuildByName: getBuildByName,
     getBuildsByProjectName: getBuildsByProjectName,
     getBuildsByProjectsName: getBuildsByProjectsName,
-    getZipPackage: getZipPackage
+    getZipPackage: getZipPackage,
+    getCronJobs: getCronJobs,
+    deleteCronJob: deleteCronJob
 };
