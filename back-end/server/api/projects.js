@@ -1,9 +1,8 @@
 'use strict';
 
 var projectsEntities = require('../entities/projects-entities'),
-    branchesEntities = require('../entities/branches-entities'),
+    branchesManager = require('../api/branches'),
     httpStatuses = require('../components/http-statuses'),
-    constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
     utils = require('../lib/utils/others'),
     Q = require('q');
@@ -48,7 +47,7 @@ var deleteProject = function (name, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -62,7 +61,7 @@ var getProjects = function (owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -72,7 +71,7 @@ var getProject = function (name, owner) {
             .then(function (project) {
                 if (project) {
                     logger.debug('Project for ' + owner + ' found.');
-                    branchesEntities.findAllBranchesForProject(project)
+                    branchesManager.findAllBranchesForProject(project)
                         .then(function(project)
                         {
                             logger.debug('Branches for ' + name + ' found.');
@@ -83,7 +82,7 @@ var getProject = function (name, owner) {
                         {
                             logger.error('Error: ' + utils.translateError(err));
                             reject(err);
-                        })
+                        });
                 } else {
                     utils.throwError(httpStatuses.Projects.NotExists);
                 }
@@ -91,7 +90,7 @@ var getProject = function (name, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -108,7 +107,7 @@ var setAsAutoScript = function (projectName, owner, scriptName) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 }
 

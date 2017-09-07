@@ -16,3 +16,11 @@ module.exports.hashPassword = function (password) {
 module.exports.verifyPasswordHash = function (hash, password) {
     return bcrypt.compareSync(hash, password);
 };
+
+module.exports.encrypt = function (text) {
+    return Buffer.from(text).toString('base64');
+};
+
+module.exports.decrypt = function (encryptedText) {
+    return Buffer.from(encryptedText, 'base64').toString();
+};

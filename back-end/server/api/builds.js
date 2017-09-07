@@ -6,6 +6,7 @@ var projectsEntities = require('../entities/projects-entities'),
     constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
     utils = require('../lib/utils/others'),
+    securityTools = require('../lib/utils/security-tools'),
     config = require('../config/config'),
     path = require('path'),
     Q = require('q'),
@@ -27,7 +28,7 @@ var runBuild = function (buildEntity, owner) {
                     var buildName = project.name + '-' + Date.now();
                     var githubClient = project.isPrivate ? new GitHub({
                         username: project.username,
-                        password: project.password
+                        password: securityTools.decrypt(project.password)
                     }) : new GitHub();
                     const repo = githubClient.repo(project.url.replace('https://github.com/', ''));
                     const branch = repo.branch(buildEntity.projectVersion);
