@@ -17,7 +17,7 @@ var addNewScript = function (scriptEntity, owner, project) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -49,7 +49,7 @@ var getAllScripts = function (owner, project) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -64,7 +64,7 @@ var getDefaultScripts = function () {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -82,7 +82,7 @@ var getScriptContent = function (projectName, name, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -100,7 +100,7 @@ var getDefaultScriptContent = function (name) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 

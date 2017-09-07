@@ -30,7 +30,7 @@ function MainCtrl($scope, $window, projectsService, scriptsService, $state, Swee
                                 type: 'error',
                                 text: JSON.stringify(err)
                             });
-                        })
+                        });
                 }, function (err) {
                     SweetAlert.swal({
                         title: 'Error occurred',

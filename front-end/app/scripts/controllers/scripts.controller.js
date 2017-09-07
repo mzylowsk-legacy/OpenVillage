@@ -26,7 +26,7 @@ angular.module('openvillage')
                     SweetAlert.swal({
                         title: 'Script created',
                         type: 'success',
-                        confirmButtonText: 'Back to list',
+                        confirmButtonText: 'Back to list'
                     }, function() {
                         $state.go('index.projects.details', {name: $scope.projectName});
                     });
