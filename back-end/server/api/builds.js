@@ -49,7 +49,7 @@ var runBuild = function (buildEntity, owner) {
 
                         if (project.isPrivate && project.username && project.password) {
                             addComandArg('--username', project.username, args);
-                            addComandArg('--password', project.password, args);
+                            addComandArg('--password', securityTools.decrypt(project.password), args);
                         }
                         addComandArg('--commitSHA', infos.commit.sha, args);
 
