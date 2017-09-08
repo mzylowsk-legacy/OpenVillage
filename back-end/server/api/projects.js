@@ -5,6 +5,7 @@ var projectsEntities = require('../entities/projects-entities'),
     httpStatuses = require('../components/http-statuses'),
     logger = require('../lib/logger/logger').init(),
     utils = require('../lib/utils/others'),
+    securityTools = require('../lib/utils/security-tools'),
     Q = require('q');
 
 var addNewProject = function (projectEntity, owner) {
@@ -65,7 +66,7 @@ var getProjects = function (owner) {
     });
 };
 
-var getProject = function (name, owner) {
+var getProjectWithBranches = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
         projectsEntities.findProjectByNameAndOwner(name, owner, true)
             .then(function (project) {
@@ -75,7 +76,6 @@ var getProject = function (name, owner) {
                         .then(function(project)
                         {
                             logger.debug('Branches for ' + name + ' found.');
-                            project.password = 0;
                             resolve(project);
                         })
                         .catch(function(err)
@@ -86,6 +86,50 @@ var getProject = function (name, owner) {
                 } else {
                     utils.throwError(httpStatuses.Projects.NotExists);
                 }
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
+    });
+};
+
+var getProject = function (name, owner) {
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.findProjectByNameAndOwner(name, owner, true)
+            .then(function (project) {
+                if (project) {
+                    logger.debug('Project for ' + owner + ' found.');
+                    resolve(project);
+                } else {
+                    utils.throwError(httpStatuses.Projects.NotExists);
+                }
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
+    });
+};
+
+var editProject = function (project, owner) {
+    var projectEntity = {
+        isPrivate: project.isPrivate,
+        url: project.url,
+        description: project.description
+    };
+    if (project.isPrivate) {
+        projectEntity.username = project.username;
+        projectEntity.password = securityTools.encrypt(project.password);
+    } else {
+        projectEntity.username = undefined;
+        projectEntity.password = undefined;
+    }
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.editProject(project.name, projectEntity, owner)
+            .then(function () {
+                logger.debug('Project ' + project.name + ' has been updated.');
+                resolve(httpStatuses.Projects.Updated);
             })
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
@@ -116,5 +160,7 @@ module.exports = {
     deleteProject: deleteProject,
     getProjects: getProjects,
     getProject: getProject,
+    getProjectWithBranches: getProjectWithBranches,
+    editProject: editProject,
     setAsAutoScript: setAsAutoScript
 };

@@ -67,7 +67,7 @@ angular.module('openvillage')
                             type: 'success',
                             confirmButtonText: 'OK'
                         }, function() {
-                            $state.go('index');
+                            $state.go('index.reports');
                         });
 
                     }, function (err) {

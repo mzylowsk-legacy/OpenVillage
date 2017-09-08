@@ -29,6 +29,7 @@ var projects = {
     //success
     Created: {status: 201, group: 'Projects', ID: 'Created'},
     Removed: {status: 204, group: 'Projects', ID: 'Removed'},
+    Updated: {status: 200, group: 'Projects', ID: 'Updated'},
     //errors
     AlreadyExists: {status: 409, group: 'Projects', ID: 'AlreadyExists'},
     NotExists: {status: 404, group: 'Projects', ID: 'NotExists'}
