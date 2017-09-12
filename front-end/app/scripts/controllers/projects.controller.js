@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('openvillage')
-    .controller('ProjectsCtrl', function ($scope, usersService, projectsService, $window, SweetAlert, $state, DTOptionsBuilder, DTColumnDefBuilder) {
+    .controller('ProjectsCtrl', function ($scope, usersService, projectsService, $window, SweetAlert, $state, DTOptionsBuilder,
+                                          DTColumnDefBuilder, messages) {
 
         $scope.userName = $window.sessionStorage.sessionUsername;
 
@@ -35,12 +36,7 @@ angular.module('openvillage')
                 }, function (err) {
                     $scope.submitted = true;
                     console.log(err);
-
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.PROJECT_SAVING_FAILED);
                 });
         };
 
@@ -50,11 +46,7 @@ angular.module('openvillage')
                     $scope.projects = res;
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_PROJECTS_FAILED);
                 });
         };
 
@@ -75,18 +67,10 @@ angular.module('openvillage')
                 projectsService.deleteProject(projectName)
                     .then(function() {
                         $scope.projects.splice(index, 1);
-                        SweetAlert.swal({
-                            title: 'Deleted!',
-                            text: 'Your project has been deleted.',
-                            type: 'success'
-                        });
+                        SweetAlert.swal(messages.success.DELETION_PROJECT);
                     }, function (err) {
                         console.log(err);
-                        SweetAlert.swal({
-                            title: 'Error occurred',
-                            type: 'error',
-                            text: JSON.stringify(err)
-                        });
+                        SweetAlert.swal(messages.errors.DELETION_PROJECT_FAILED);
                     });
             });
         };

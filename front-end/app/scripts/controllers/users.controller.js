@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openvillage')
-    .controller('UsersCtrl', function ($scope, usersService, $window, $stateParams, $location, $state, SweetAlert) {
+    .controller('UsersCtrl', function ($scope, usersService, $window, $stateParams, $location, $state, SweetAlert, messages) {
 
         $scope.birthdayPicker = {
             opened: false
@@ -14,7 +14,8 @@ angular.module('openvillage')
                     $window.sessionStorage.sessionUsername = username;
                     $state.go('index.main');
                 }, function (err) {
-                    $scope.error = err;
+                    console.log(err);
+                    $scope.error = messages.errors.LOGIN_FAILED.text;
                 });
         };
 
@@ -38,11 +39,7 @@ angular.module('openvillage')
                     });
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: 'Cannot create a user. Check the fields in the registration form.'
-                    });
+                    SweetAlert.swal(messages.errors.CANNOT_CREATE_USER);
                 });
         };
 

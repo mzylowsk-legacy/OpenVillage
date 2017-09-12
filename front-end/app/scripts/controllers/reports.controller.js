@@ -2,7 +2,8 @@
 
 angular.module('openvillage')
 
-    .controller('ReportsCtrl', function ($scope, $window, usersService, reportsService, projectsService, buildsService, SweetAlert, $state) {
+    .controller('ReportsCtrl', function ($scope, $window, usersService, reportsService, projectsService, buildsService,
+                                         SweetAlert, $state, messages) {
         $scope.periods = ['day', 'week', 'month', 'year'];
         $scope.format = 'yyyy/MM/dd';
         $scope.date = new Date();
@@ -34,11 +35,7 @@ angular.module('openvillage')
                     $scope.projects = res;
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_PROJECTS_FAILED);
                 });
         };
 
@@ -87,12 +84,7 @@ angular.module('openvillage')
                     }, function (err) {
                         $scope.submitted = true;
                         console.log(err);
-
-                        SweetAlert.swal({
-                            title: 'Error occurred',
-                            type: 'error',
-                            text: JSON.stringify(err)
-                        });
+                        SweetAlert.swal(messages.errors.SENDING_REPORT_FAILED);
                     });
             }
         };

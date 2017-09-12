@@ -3,7 +3,7 @@
 angular.module('openvillage')
     .controller('ProjectDetailsCtrl', function ($scope, usersService, projectsService, scriptsService, buildsService,
                                                 $window, $stateParams, SweetAlert, $state, DTOptionsBuilder,
-                                                DTColumnDefBuilder, $interval) {
+                                                DTColumnDefBuilder, $interval, messages) {
 
         $scope.userName = $window.sessionStorage.sessionUsername;
         $scope.projectName = $stateParams.name;
@@ -51,11 +51,7 @@ angular.module('openvillage')
                     $scope.projectDetails = res;
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_PROJECT_DETAILS);
                 });
         };
 
@@ -65,19 +61,10 @@ angular.module('openvillage')
                     $scope.projectDetails = res;
                 }, function (err) {
                     if (err.branchError) {
-                        SweetAlert.swal({
-                            title: 'Error in getting branches.',
-                            type: 'info',
-                            text: 'Check your credentials and repository address'
-                        });
+                        SweetAlert.swal(messages.info.GET_BRANCHES);
                         $scope.projectDetails = err;
                     } else {
-                        console.log(err);
-                        SweetAlert.swal({
-                            title: 'Error in fetching project from database',
-                            type: 'error',
-                            text: JSON.stringify(err)
-                        });
+                        SweetAlert.swal(messages.errors.GET_PROJECT_DETAILS_WITH_BRANCHES);
                     }
                 });
         };
@@ -91,20 +78,12 @@ angular.module('openvillage')
                             $scope.scriptsPublic = res.scripts;
                         }, function (err) {
                             console.log(err);
-                            SweetAlert.swal({
-                                title: 'Error occurred',
-                                type: 'error',
-                                text: JSON.stringify(err)
-                            });
+                            SweetAlert.swal(messages.errors.GET_SCRIPTS);
                         });
 
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_SCRIPTS);
                 });
         };
 
@@ -125,18 +104,10 @@ angular.module('openvillage')
                 scriptsService.deleteScript(projectName, scriptName)
                     .then(function() {
                         $scope.scripts.splice(index, 1);
-                        SweetAlert.swal({
-                            title: 'Deleted!',
-                            text: 'Your script has been deleted.',
-                            type: 'success'
-                        });
+                        SweetAlert.swal(messages.success.DELETION_SCRIPT);
                     }, function (err) {
                         console.log(err);
-                        SweetAlert.swal({
-                            title: 'Error occurred',
-                            type: 'error',
-                            text: JSON.stringify(err)
-                        });
+                        SweetAlert.swal(messages.errors.DELETION_SCRIPT);
                     });
             });
         };
@@ -174,11 +145,7 @@ angular.module('openvillage')
 
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_BUILD_DETAILS);
                 });
         };
 
@@ -202,11 +169,7 @@ angular.module('openvillage')
                     }, 1000);
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.BUILD_WAS_NOT_RUNNING);
                 });
         };
 
@@ -222,18 +185,10 @@ angular.module('openvillage')
             buildsService.setCronJob(body)
                 .then(function (res) {
                     console.log(res);
-                    SweetAlert.swal({
-                        title: 'Cron build saved!',
-                        type: 'success',
-                        text: 'Cron saved successfully'
-                    });
+                    SweetAlert.swal(messages.success.CRON_BUILD_SAVED);
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.CRON_NOT_SET_CORRECTLY);
                 });
         };
 
@@ -316,11 +271,7 @@ angular.module('openvillage')
                 };
 
                 $scope.selectedTasks.push(newTask);
-                SweetAlert.swal({
-                    title: 'Added!',
-                    text: 'Step has been added to queue.',
-                    type: 'success'
-                });
+                SweetAlert.swal(messages.success.STEP_ADDED);
             });
         };
 
@@ -339,11 +290,7 @@ angular.module('openvillage')
                 }
 
                 $scope.selectedTasks.splice(pos, 1);
-                SweetAlert.swal({
-                    title: 'Deleted!',
-                    text: 'Step has been deleted.',
-                    type: 'success'
-                });
+                SweetAlert.swal(messages.success.STEP_DELETED);
             });
         };
 
@@ -359,11 +306,7 @@ angular.module('openvillage')
                     $scope.cronJobs = res;
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Getting of cron jobs failed',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_CRON_JOB_FAILED);
                 });
         };
 
@@ -387,18 +330,10 @@ angular.module('openvillage')
                             return cronJob.name !== cronName;
                         });
                         console.log('Cron job deleted with status: ' + res.status);
-                        SweetAlert.swal({
-                            title: 'Deleted!',
-                            text: 'Cron job has been deleted.',
-                            type: 'success'
-                        });
+                        SweetAlert.swal(messages.success.CRON_JOB_DELETED);
                     }, function (err) {
                         console.log(err);
-                        SweetAlert.swal({
-                            title: 'Getting of cron jobs failed',
-                            type: 'error',
-                            text: JSON.stringify(err)
-                        });
+                        SweetAlert.swal(messages.errors.DELETION_JOB_FAILED);
                     });
             });
         };

@@ -8,7 +8,7 @@
  */
 'use strict';
 
-function MainCtrl($scope, $window, projectsService, scriptsService, $state, SweetAlert) {
+function MainCtrl($scope, $window, projectsService, scriptsService, $state, SweetAlert, messages) {
 
     $scope.$state = $state;
     this.userName = $window.sessionStorage.sessionUsername;
@@ -25,18 +25,12 @@ function MainCtrl($scope, $window, projectsService, scriptsService, $state, Swee
                         .then(function (result) {
                             $scope.numberOfScripts += result.scripts.length;
                         }, function (err) {
-                            SweetAlert.swal({
-                                title: 'Error occurred',
-                                type: 'error',
-                                text: JSON.stringify(err)
-                            });
+                            console.log(err);
+                            SweetAlert.swal(messages.errors.GET_SCRIPTS);
                         });
                 }, function (err) {
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    console.log(err);
+                    SweetAlert.swal(messages.errors.GET_PROJECTS_FAILED);
                 });
             });
     };

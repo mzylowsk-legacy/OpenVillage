@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openvillage')
-    .controller('ProjectEditCtrl', function ($scope, $window, $stateParams, projectsService, SweetAlert, $state) {
+    .controller('ProjectEditCtrl', function ($scope, $window, $stateParams, projectsService, SweetAlert, $state, messages) {
 
         $scope.userName = $window.sessionStorage.sessionUsername;
         $scope.projectName = $stateParams.name;
@@ -15,11 +15,7 @@ angular.module('openvillage')
                     $scope.project = res;
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_PROJECT_DETAILS);
                 });
         };
 
@@ -35,11 +31,7 @@ angular.module('openvillage')
                     });
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.SAVING_CHANGES_FAILED);
                 });
         };
     });

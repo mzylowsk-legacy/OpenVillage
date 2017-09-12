@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openvillage')
-    .controller('ScriptsCtrl', function ($scope, usersService, scriptsService, $window, SweetAlert, $state, $stateParams) {
+    .controller('ScriptsCtrl', function ($scope, usersService, scriptsService, $window, SweetAlert, $state, $stateParams, messages) {
 
         $scope.userName = $window.sessionStorage.sessionUsername;
         $scope.projectName = $stateParams.name;
@@ -13,11 +13,7 @@ angular.module('openvillage')
 
         $scope.addScript = function (script) {
             if(script.code.length <= 1) {
-                SweetAlert.swal({
-                    title: 'Error occurred',
-                    type: 'error',
-                    text: 'Code cannot be empty'
-                });
+                SweetAlert.swal(messages.errors.EMPTY_CODE);
                 return;
             }
 
@@ -32,11 +28,7 @@ angular.module('openvillage')
                     });
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.ADDING_NEW_SCRIPT_FAILED);
                 });
         };
 
@@ -46,11 +38,7 @@ angular.module('openvillage')
                     $scope.scripts = res;
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_SCRIPTS);
                 });
         };
 
@@ -60,21 +48,13 @@ angular.module('openvillage')
                     $scope.script.code = res;
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.GET_SCRIPT_DATA_FAILED);
                 });
         };
 
         $scope.editScript = function (projectName, script) {
             if(script.code.length <= 1) {
-                SweetAlert.swal({
-                    title: 'Error occurred',
-                    type: 'error',
-                    text: 'Code cannot be empty'
-                });
+                SweetAlert.swal(messages.errors.EMPTY_CODE);
                 return;
             }
 
@@ -89,11 +69,7 @@ angular.module('openvillage')
                     });
                 }, function (err) {
                     console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    SweetAlert.swal(messages.errors.SAVING_CHANGES_FAILED);
                 });
         };
 

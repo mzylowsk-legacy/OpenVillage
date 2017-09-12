@@ -3,7 +3,7 @@
 angular.module('openvillage')
     .controller('ProjectBuildsCtrl', function ($scope, usersService, projectsService, scriptsService, buildsService,
                                                 $window, $stateParams, $location, $anchorScroll, SweetAlert, $state, DTOptionsBuilder,
-                                                DTColumnDefBuilder) {
+                                                DTColumnDefBuilder, messages) {
 
         $scope.userName = $window.sessionStorage.sessionUsername;
         $scope.projectName = $stateParams.name;
@@ -29,11 +29,8 @@ angular.module('openvillage')
                 .then(function(res) {
                     $scope.buildsList = res;
                 }, function (err) {
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    console.log(err);
+                    SweetAlert.swal(messages.errors.BUILD_LIST_CREATION);
                 });
         };
 
@@ -42,11 +39,8 @@ angular.module('openvillage')
                 .then(function (res) {
                     $scope.buildDetails = res;
                 }, function (err) {
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    console.log(err);
+                    SweetAlert.swal(messages.errors.GET_BUILD_DETAILS);
                 });
         };
 
@@ -93,11 +87,8 @@ angular.module('openvillage')
                         }
                     });
                 }, function (err) {
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    console.log(err);
+                    SweetAlert.swal(messages.errors.ZIP_PACKAGE_CREATION);
                 });
         };
 
