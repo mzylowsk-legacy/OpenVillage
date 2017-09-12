@@ -64,12 +64,21 @@ angular.module('openvillage')
                 .then(function (res) {
                     $scope.projectDetails = res;
                 }, function (err) {
-                    console.log(err);
-                    SweetAlert.swal({
-                        title: 'Error occurred',
-                        type: 'error',
-                        text: JSON.stringify(err)
-                    });
+                    if (err.branchError) {
+                        SweetAlert.swal({
+                            title: 'Error in getting branches.',
+                            type: 'info',
+                            text: 'Check your credentials and repository address'
+                        });
+                        $scope.projectDetails = err;
+                    } else {
+                        console.log(err);
+                        SweetAlert.swal({
+                            title: 'Error in fetching project from database',
+                            type: 'error',
+                            text: JSON.stringify(err)
+                        });
+                    }
                 });
         };
 

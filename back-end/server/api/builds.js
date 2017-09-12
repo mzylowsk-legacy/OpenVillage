@@ -173,7 +173,7 @@ var setCronJob = function (buildEntity, owner) {
 
         agenda.define(cronName, function (job) {
             runBuild(job.attrs.data, owner);
-            logger.debug('Job with build fired: ' + job + 'for project ' + project.name);
+            logger.debug('Job with build fired: ' + job);
         });
 
         agenda.on('ready', function () {

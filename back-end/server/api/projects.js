@@ -80,8 +80,10 @@ var getProjectWithBranches = function (name, owner) {
                         })
                         .catch(function(err)
                         {
-                            logger.error('Error: ' + utils.translateError(err));
-                            reject(err);
+                            logger.error('Error during fetching branches: ' + utils.translateError(err));
+                            project.versions = [{name: 'master'}];
+                            project.branchError = true;
+                            reject(project);
                         });
                 } else {
                     utils.throwError(httpStatuses.Projects.NotExists);
