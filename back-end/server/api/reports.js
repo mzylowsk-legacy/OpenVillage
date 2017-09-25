@@ -15,6 +15,7 @@ var sendReport = function(newReport, owner) {
             }), owner)
             .then(function (builds) {
                 var selectedProjectDescription = '';
+                var infoAboutProjectsBeforeDate = '';
                 if (newReport.selectedProjects.length > 0) {
                     selectedProjectDescription += '\n\nInformation about builds:\n';
                 }
@@ -39,12 +40,15 @@ var sendReport = function(newReport, owner) {
                     }
                     selectedProjectDescription += '\n\n';
                 });
+                if (newReport.ifCountProjectBeforeDate) {
+                    infoAboutProjectsBeforeDate += '\nNumber of projects added after date ' + newReport.selectedDate.substring(0,10) + ': ' + newReport.latestProjectsInfo;
+                }
 
                 mailTools.sendEmail(
                     newReport.email,
                     'Report from OpenVillage',
                     'Number of all projects: ' + newReport.numOfAllProjects +
-                    '\nNumber of projects added after date ' + newReport.selectedDate.substring(0,10) + ': ' + newReport.latestProjectsInfo +
+                    infoAboutProjectsBeforeDate +
                     selectedProjectDescription);
                 resolve();
             })
