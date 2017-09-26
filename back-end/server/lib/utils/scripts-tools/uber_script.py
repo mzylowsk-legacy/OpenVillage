@@ -99,6 +99,16 @@ def run_build_steps(workspace, project_name, build_steps_list, build_name, mongo
             update_build_step_in_database(build_name, order, str(e), status_codes[-1], mongo_client)
 
 
+def get_diff_between_commits(workspace, project_name, lastCommit, currentCommit):
+    print('Getting diff between current and last successful build')
+    repo_dir = os.path.join(workspace, project_name)
+    try:
+        output = subprocess.check_output(['git', 'diff', lastCommit, currentCommit ], cwd=repo_dir)
+        print(output)
+    except Exception as e:
+        print(e)
+
+
 def delete_repository_dir(workspace, project_name):
     print('Cleaning workspace after finishing build')
     shutil.rmtree(os.path.join(workspace, project_name), ignore_errors=True)
@@ -174,6 +184,7 @@ def parse_args():
     parser.add_argument('-a', '--mongo-database-name', required=True, help='MongoDb database name')
     parser.add_argument('-c', '--mongo-collection-name', required=True, help='MongoDb collection name')
     parser.add_argument('-t', '--commitSHA', required=True, help='GitHub head commit sha')
+    parser.add_argument('-l', '--lastCommitSHA', required=True, help='GitHub commit sha to compare with current head')
 
     return parser.parse_args()
 
@@ -193,6 +204,7 @@ def main():
     download_repository(args.destination, args.project_name, args.github_url, args.username, args.password, build_name,
                         mongo_client)
     set_repository_version(args.destination, args.project_name, args.project_version, build_name, mongo_client)
+    get_diff_between_commits(args.destination, args.project_name, args.lastCommitSHA, args.commitSHA)
     run_build_steps(args.destination, args.project_name, args.build_steps, build_name, mongo_client)
     update_build_status(build_name, mongo_client)
     delete_repository_dir(args.destination, args.project_name)

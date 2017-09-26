@@ -4,7 +4,7 @@ var  Q = require('q'),
 module.exports.findAllBranchesForProject = function (project) {
     return Q.Promise(function (resolve, reject) {
         var client;
-        if(project.isPrivate == true) {
+        if(project.isPrivate === true) {
             client = new GitHub({
                 username: project.username,
                 password: project.password

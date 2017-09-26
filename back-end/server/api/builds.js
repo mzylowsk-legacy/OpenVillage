@@ -24,6 +24,7 @@ var runBuild = function (buildEntity, owner) {
             .then(function (project) {
                 if (project) {
                     logger.debug('Project %s has been found', buildEntity.projectName);
+
                     var buildName = project.name + '-' + Date.now();
                     var githubClient = project.isPrivate ? new GitHub({
                         username: project.username,
@@ -51,29 +52,49 @@ var runBuild = function (buildEntity, owner) {
                         }
                         addComandArg('--commitSHA', infos.commit.sha, args);
 
-                        if (buildEntity.steps.length) {
-                            for(var i in buildEntity.steps) {
-                                var scriptPath = null;
-                                if (buildEntity.steps[i].public) {
-                                    scriptPath = path.join(constants.builder.commonScriptsPath, buildEntity.steps[i].scriptName + '.sh');
-                                } else {
-                                    scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', buildEntity.steps[i].scriptName + '.sh');
-                                }
-                                if (buildEntity.steps[i].args) {
-                                    addComandArg('--build-steps', '"bash ' + scriptPath + ' ' + buildEntity.steps[i].args + '"', args);
-                                } else {
-                                    addComandArg('--build-steps', 'bash ' + scriptPath, args);
+                        var lastCommitSha = infos.commit.sha;
+
+                        getBuildsByProjectName(buildEntity.projectName, owner)
+                            .then(function(builds) {
+                            for(var i in builds) {
+                                logger.debug('Build %s: ',builds[i].buildName);
+                                if((builds[i].status_code === 0) && (builds[i].projectVersion === buildEntity.projectVersion)){
+                                    lastCommitSha = builds[i].commit_sha;
+                                    break;
                                 }
                             }
-                        }
 
-                        logger.debug('Spawning process: python ' + args);
-                        utils.spawnProcess('python', args);
-                        logger.debug('Building process has been triggered');
-                        var response = {
-                            buildName: buildName
-                        }
-                        resolve(response);
+                            logger.debug('Last successful build\'s commit sha: %s', lastCommitSha);
+
+                            addComandArg('--lastCommitSHA', lastCommitSha, args);
+
+                            if (buildEntity.steps.length) {
+                                for(var i in buildEntity.steps) {
+                                    var scriptPath = null;
+                                    if (buildEntity.steps[i].public) {
+                                        scriptPath = path.join(constants.builder.commonScriptsPath, buildEntity.steps[i].scriptName + '.sh');
+                                    } else {
+                                        scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', buildEntity.steps[i].scriptName + '.sh');
+                                    }
+                                    if (buildEntity.steps[i].args) {
+                                        addComandArg('--build-steps', '"bash ' + scriptPath + ' ' + buildEntity.steps[i].args + '"', args);
+                                    } else {
+                                        addComandArg('--build-steps', 'bash ' + scriptPath, args);
+                                    }
+                                }
+                            }
+
+                            logger.debug('Spawning process: python ' + args);
+                            utils.spawnProcess('python', args);
+                            logger.debug('Building process has been triggered');
+                            var response = {
+                                buildName: buildName
+                            }
+                            resolve(response);
+
+                        });
+
+
                     });
                 } else {
                     utils.throwError(httpStatuses.Projects.NotExists);

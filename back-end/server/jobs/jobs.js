@@ -71,11 +71,11 @@ var newCommitBuildTrigger = function() {
                             var tmpDirName = guid.raw();
                             exec('git clone ' + project.url + ' /tmp/' + tmpDirName + ' -q && ' +
                             'cd /tmp/' + tmpDirName + ' && git rev-parse master && cd .. && rm -rf /tmp/' + tmpDirName , function(err, stdout, stderr) {
-                                if(err == null) {
+                                if(err === null) {
                                     var commitSha = stdout.replace('\n','');
                                     buildsEntities.findBuildWithCommitSha(project.name, project.owner, commitSha)
                                         .then(function (buildRuns) {
-                                            if(buildRuns.length == 0) {
+                                            if(buildRuns.length === 0) {
                                                 logger.info('Trigger build for project ' + project.name)
                                                 var buildEntity =  {
                                                         projectVersion: 'master',
