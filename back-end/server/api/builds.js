@@ -52,47 +52,29 @@ var runBuild = function (buildEntity, owner) {
                         }
                         addComandArg('--commitSHA', infos.commit.sha, args);
 
-                        var lastCommitSha = infos.commit.sha;
-
-                        getBuildsByProjectName(buildEntity.projectName, owner)
-                            .then(function(builds) {
-                            for(var i in builds) {
-                                logger.debug('Build %s: ',builds[i].buildName);
-                                if((builds[i].status_code === 0) && (builds[i].projectVersion === buildEntity.projectVersion)){
-                                    lastCommitSha = builds[i].commit_sha;
-                                    break;
+                        if (buildEntity.steps.length) {
+                            for(var i in buildEntity.steps) {
+                                var scriptPath = null;
+                                if (buildEntity.steps[i].public) {
+                                    scriptPath = path.join(constants.builder.commonScriptsPath, buildEntity.steps[i].scriptName + '.sh');
+                                } else {
+                                    scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', buildEntity.steps[i].scriptName + '.sh');
+                                }
+                                if (buildEntity.steps[i].args) {
+                                    addComandArg('--build-steps', '"bash ' + scriptPath + ' ' + buildEntity.steps[i].args + '"', args);
+                                } else {
+                                    addComandArg('--build-steps', 'bash ' + scriptPath, args);
                                 }
                             }
+                        }
 
-                            logger.debug('Last successful build\'s commit sha: %s', lastCommitSha);
-
-                            addComandArg('--lastCommitSHA', lastCommitSha, args);
-
-                            if (buildEntity.steps.length) {
-                                for(var i in buildEntity.steps) {
-                                    var scriptPath = null;
-                                    if (buildEntity.steps[i].public) {
-                                        scriptPath = path.join(constants.builder.commonScriptsPath, buildEntity.steps[i].scriptName + '.sh');
-                                    } else {
-                                        scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', buildEntity.steps[i].scriptName + '.sh');
-                                    }
-                                    if (buildEntity.steps[i].args) {
-                                        addComandArg('--build-steps', '"bash ' + scriptPath + ' ' + buildEntity.steps[i].args + '"', args);
-                                    } else {
-                                        addComandArg('--build-steps', 'bash ' + scriptPath, args);
-                                    }
-                                }
-                            }
-
-                            logger.debug('Spawning process: python ' + args);
-                            utils.spawnProcess('python', args);
-                            logger.debug('Building process has been triggered');
-                            var response = {
-                                buildName: buildName
-                            }
-                            resolve(response);
-
-                        });
+                        logger.debug('Spawning process: python ' + args);
+                        utils.spawnProcess('python', args);
+                        logger.debug('Building process has been triggered');
+                        var response = {
+                            buildName: buildName
+                        }
+                        resolve(response);
 
 
                     });
@@ -211,11 +193,77 @@ var setCronJob = function (buildEntity, owner) {
     });
 };
 
+var getDiff = function(buildEntity, owner){
+    return Q.Promise(function (resolve, reject) {
+        logger.debug('get diff called');
+        logger.debug(buildEntity.name);
+        projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
+            .then(function (project) {
+                if (project) {
+                    logger.debug('Project %s has been found', buildEntity.projectName);
+
+                    var buildName = project.name + '-' + Date.now();
+                    var githubClient = project.isPrivate ? new GitHub({
+                        username: project.username,
+                        password: project.password
+                    }) : new GitHub();
+                    const repo = githubClient.repo(project.url.replace('https://github.com/', ''));
+                    const branch = repo.branch(buildEntity.projectVersion);
+                    branch.info().then(function (infos) {
+                        logger.debug('%s Branch info fetched from repository', buildEntity.projectVersion);
+                        var args = [constants.builder.diffScriptPath];
+                        addComandArg('--build-name', buildName, args);
+                        addComandArg('--project-owner', project.owner, args);
+                        addComandArg('--project-name', project.name, args);
+                        addComandArg('--project-version', buildEntity.projectVersion, args);
+                        addComandArg('--github-url', project.url, args);
+                        addComandArg('--destination', path.join(config.builder.workspace.path, owner, 'builds'), args);
+
+                        if (project.isPrivate && project.username && project.password) {
+                            addComandArg('--username', project.username, args);
+                            addComandArg('--password', project.password, args);
+                        }
+                        addComandArg('--commitSHA', infos.commit.sha, args);
+
+                        var lastCommitSha = infos.commit.sha;
+
+                        getBuildsByProjectName(buildEntity.projectName, owner)
+                            .then(function (builds) {
+                                for (var i in builds) {
+                                    logger.debug('Build %s: ', builds[i].buildName);
+                                    if ((builds[i].status_code === 0) && (builds[i].projectVersion === buildEntity.projectVersion)) {
+                                        lastCommitSha = builds[i].commit_sha;
+                                        break;
+                                    }
+                                }
+
+                                logger.debug('Last successful build\'s commit sha: %s', lastCommitSha);
+
+                                addComandArg('--lastCommitSHA', lastCommitSha, args);
+
+                                var spawn = require('child_process').spawn;
+                                var response;
+                                logger.debug('Spawning process: python ' + args);
+                                var scriptExecution = spawn('python', args);
+                                scriptExecution.stdout.on('data', function(data){
+                                    logger.debug('Printing python script output from node:');
+                                    response = data.toString();
+                                    logger.debug(response);
+                                    resolve(response);
+                                });
+                            });
+                    });
+                }
+            });
+    });
+};
+
 module.exports = {
     runBuild: runBuild,
     setCronJob: setCronJob,
     getBuildByName: getBuildByName,
     getBuildsByProjectName: getBuildsByProjectName,
     getBuildsByProjectsName: getBuildsByProjectsName,
-    getZipPackage: getZipPackage
+    getZipPackage: getZipPackage,
+    getDiff: getDiff
 };
