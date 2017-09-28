@@ -2,7 +2,7 @@
 
 angular.module('openvillage')
     .controller('ProjectBuildsCtrl', function ($scope, usersService, projectsService, scriptsService, buildsService,
-                                                $window, $stateParams, SweetAlert, $state, DTOptionsBuilder,
+                                                $window, $stateParams, $location, $anchorScroll, SweetAlert, $state, DTOptionsBuilder,
                                                 DTColumnDefBuilder) {
 
         $scope.userName = $window.sessionStorage.sessionUsername;
@@ -53,11 +53,17 @@ angular.module('openvillage')
         $scope.getDiff = function(buildName) {
             buildsService.getDiff(buildName)
                 .then(function (res) {
-                    $scope.diff = 'at least that works';
+                    $scope.diff = 'Code changes';
                     if (res) {
                         $scope.diff = res.toString();
                     }
-                    $scope.myvalue = !$scope.myvalue;
+
+                    $scope.showDiff = 1;
+
+                    $location.hash('codeChanges');
+                    $location.hash('codeChanges');
+                    $anchorScroll();
+
                 }, function (err) {
                     SweetAlert.swal({
                         title: 'Error occurred',

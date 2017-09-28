@@ -10,6 +10,7 @@ var projectsEntities = require('../entities/projects-entities'),
     path = require('path'),
     Q = require('q'),
     GitHub = require('octocat'),
+    spawn = require('child_process').spawn,
     Agenda = require('agenda');
 
 
@@ -202,7 +203,7 @@ var getDiff = function(buildEntity, owner){
                 if (project) {
                     logger.debug('Project %s has been found', buildEntity.projectName);
 
-                    var buildName = project.name + '-' + Date.now();
+                    var buildName = buildEntity.buildName;
                     var githubClient = project.isPrivate ? new GitHub({
                         username: project.username,
                         password: project.password
@@ -230,25 +231,20 @@ var getDiff = function(buildEntity, owner){
                         getBuildsByProjectName(buildEntity.projectName, owner)
                             .then(function (builds) {
                                 for (var i in builds) {
-                                    logger.debug('Build %s: ', builds[i].buildName);
                                     if ((builds[i].status_code === 0) && (builds[i].projectVersion === buildEntity.projectVersion)) {
                                         lastCommitSha = builds[i].commit_sha;
                                         break;
                                     }
                                 }
 
-                                logger.debug('Last successful build\'s commit sha: %s', lastCommitSha);
-
                                 addComandArg('--lastCommitSHA', lastCommitSha, args);
 
-                                var spawn = require('child_process').spawn;
                                 var response;
                                 logger.debug('Spawning process: python ' + args);
                                 var scriptExecution = spawn('python', args);
                                 scriptExecution.stdout.on('data', function(data){
-                                    logger.debug('Printing python script output from node:');
                                     response = data.toString();
-                                    logger.debug(response);
+                                    logger.debug('Got diff between builds');
                                     resolve(response);
                                 });
                             });
