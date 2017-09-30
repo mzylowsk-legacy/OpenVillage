@@ -53,8 +53,9 @@ angular.module('openvillage')
         $scope.getDiff = function(buildName) {
             buildsService.getDiff(buildName)
                 .then(function (res) {
-                    $scope.diff = 'Code changes';
-                    if (res) {
+                    $scope.diff = 'No code changes';
+
+                    if (res && (res.toString().length > 1)) {
                         $scope.diff = res.toString();
                     }
 

@@ -221,17 +221,16 @@ var deleteCronJob = function (cronName, owner) {
 
 var getDiff = function(buildEntity, owner){
     return Q.Promise(function (resolve, reject) {
-        logger.debug('get diff called');
-        logger.debug(buildEntity.name);
         projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
             .then(function (project) {
                 if (project) {
                     logger.debug('Project %s has been found', buildEntity.projectName);
 
                     var buildName = buildEntity.buildName;
+
                     var githubClient = project.isPrivate ? new GitHub({
                         username: project.username,
-                        password: project.password
+                        password: securityTools.decrypt(project.password)
                     }) : new GitHub();
                     const repo = githubClient.repo(project.url.replace('https://github.com/', ''));
                     const branch = repo.branch(buildEntity.projectVersion);
@@ -247,7 +246,7 @@ var getDiff = function(buildEntity, owner){
 
                         if (project.isPrivate && project.username && project.password) {
                             addComandArg('--username', project.username, args);
-                            addComandArg('--password', project.password, args);
+                            addComandArg('--password', securityTools.decrypt(project.password), args);
                         }
                         addComandArg('--commitSHA', infos.commit.sha, args);
 
@@ -265,7 +264,6 @@ var getDiff = function(buildEntity, owner){
                                 addComandArg('--lastCommitSHA', lastCommitSha, args);
 
                                 var response;
-                                logger.debug('Spawning process: python ' + args);
                                 var scriptExecution = spawn('python', args);
                                 scriptExecution.stdout.on('data', function(data){
                                     response = data.toString();
