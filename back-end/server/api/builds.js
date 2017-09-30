@@ -27,7 +27,6 @@ var runBuild = function (buildEntity, owner) {
             .then(function (project) {
                 if (project) {
                     logger.debug('Project %s has been found', buildEntity.projectName);
-
                     var buildName = project.name + '-' + Date.now();
                     var githubClient = project.isPrivate ? new GitHub({
                         username: project.username,
@@ -78,8 +77,6 @@ var runBuild = function (buildEntity, owner) {
                             buildName: buildName
                         }
                         resolve(response);
-
-
                     });
                 } else {
                     utils.throwError(httpStatuses.Projects.NotExists);
