@@ -53,6 +53,30 @@ angular.module('openvillage')
             });
         };
 
+        this.getProjectDetailsWithBranches = function (projectName) {
+            return $q(function (resolve, reject) {
+                $http.get(SERVER_URL + '/auth/api/projects/' + projectName + '/branches')
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
+
+        this.editProject = function (project) {
+            return $q(function (resolve, reject) {
+                $http.put(SERVER_URL + '/auth/api/projects/edit', project)
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
+
         this.setAsAutoScript = function (projectName, scriptName) {
             return $q(function (resolve, reject) {
                 $http.put(SERVER_URL + '/auth/api/projects/' + projectName + '/autoScript', {scriptName: scriptName})

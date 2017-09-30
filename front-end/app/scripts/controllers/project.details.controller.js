@@ -59,8 +59,31 @@ angular.module('openvillage')
                 });
         };
 
+        $scope.getProjectDetailsWithBranches = function() {
+            projectsService.getProjectDetailsWithBranches($scope.projectName)
+                .then(function (res) {
+                    $scope.projectDetails = res;
+                }, function (err) {
+                    if (err.branchError) {
+                        SweetAlert.swal({
+                            title: 'Error in getting branches.',
+                            type: 'info',
+                            text: 'Check your credentials and repository address'
+                        });
+                        $scope.projectDetails = err;
+                    } else {
+                        console.log(err);
+                        SweetAlert.swal({
+                            title: 'Error in fetching project from database',
+                            type: 'error',
+                            text: JSON.stringify(err)
+                        });
+                    }
+                });
+        };
+
         $scope.getScriptsList = function() {
-            scriptsService.getList()
+            scriptsService.getList($scope.projectName)
                 .then(function(res) {
                     $scope.scripts = res.scripts;
                     scriptsService.getDefaultList()
@@ -85,7 +108,7 @@ angular.module('openvillage')
                 });
         };
 
-        $scope.deleteScript = function(scriptName, index) {
+        $scope.deleteScript = function(projectName, scriptName, index) {
             SweetAlert.swal({
                 title: 'Are you sure?',
                 text: 'You will not be able to recover this script!',
@@ -99,7 +122,7 @@ angular.module('openvillage')
                     return;
                 }
 
-                scriptsService.deleteScript(scriptName)
+                scriptsService.deleteScript(projectName, scriptName)
                     .then(function() {
                         $scope.scripts.splice(index, 1);
                         SweetAlert.swal({
@@ -321,6 +344,62 @@ angular.module('openvillage')
                     text: 'Step has been deleted.',
                     type: 'success'
                 });
+            });
+        };
+
+        $scope.getCronJobs = function () {
+            buildsService.getCronJobs($scope.projectName)
+                .then(function (res) {
+                    res.forEach(function (cronJob) {
+                        cronJob.data.days = cronJob.data.days.map(function (day) {
+                            return day.name;
+                        });
+                        cronJob.data.time = new Date(cronJob.data.time).toTimeString();
+                    });
+                    $scope.cronJobs = res;
+                }, function (err) {
+                    console.log(err);
+                    SweetAlert.swal({
+                        title: 'Getting of cron jobs failed',
+                        type: 'error',
+                        text: JSON.stringify(err)
+                    });
+                });
+        };
+
+        $scope.deleteCronJob = function (cronName) {
+            SweetAlert.swal({
+                title: 'Are you sure?',
+                text: 'You will remove this cron job',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Yes, delete it!',
+                closeOnConfirm: false
+            }, function(isConfirm) {
+                if(!isConfirm) {
+                    return;
+                }
+
+                buildsService.deleteCronJob(cronName)
+                    .then(function (res) {
+                        $scope.cronJobs = $scope.cronJobs.filter(function (cronJob) {
+                            return cronJob.name !== cronName;
+                        });
+                        console.log('Cron job deleted with status: ' + res.status);
+                        SweetAlert.swal({
+                            title: 'Deleted!',
+                            text: 'Cron job has been deleted.',
+                            type: 'success'
+                        });
+                    }, function (err) {
+                        console.log(err);
+                        SweetAlert.swal({
+                            title: 'Getting of cron jobs failed',
+                            type: 'error',
+                            text: JSON.stringify(err)
+                        });
+                    });
             });
         };
 

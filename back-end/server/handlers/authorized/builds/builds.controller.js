@@ -76,6 +76,26 @@ exports.setCronJob = function (req, res) {
         });
 };
 
+exports.getCronJobs = function (req, res) {
+    buildsManager.getCronJobs(req.params.projectName, req.user.username)
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
+        });
+};
+
+exports.deleteCronJob = function (req, res) {
+    buildsManager.deleteCronJob(req.params.cronName, req.user.username)
+        .then(function (result) {
+            res.send(result);
+        })
+        .catch(function (err) {
+            res.status(err.status || httpStatuses.Generic.InternalServerError.status).send(err);
+        });
+};
+
 exports.getDiff = function (req, res) {
     buildsManager.getBuildByName(req.params.name, req.user.username)
         .then(function (result) {

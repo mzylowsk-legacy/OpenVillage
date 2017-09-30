@@ -21,12 +21,12 @@ angular.module('openvillage')
                 return;
             }
 
-            scriptsService.addNewScript(script)
+            scriptsService.addNewScript(script, $scope.projectName)
                 .then(function () {
                     SweetAlert.swal({
                         title: 'Script created',
                         type: 'success',
-                        confirmButtonText: 'Back to list',
+                        confirmButtonText: 'Back to list'
                     }, function() {
                         $state.go('index.projects.details', {name: $scope.projectName});
                     });
@@ -41,7 +41,7 @@ angular.module('openvillage')
         };
 
         $scope.getScriptsList = function() {
-            scriptsService.getList()
+            scriptsService.getList($scope.projectName)
                 .then(function(res) {
                     $scope.scripts = res;
                 }, function (err) {
@@ -55,7 +55,7 @@ angular.module('openvillage')
         };
 
         $scope.loadScriptData = function() {
-            scriptsService.getScriptContent($scope.script.name)
+            scriptsService.getScriptContent($scope.script.name, $scope.projectName)
                 .then(function(res) {
                     $scope.script.code = res;
                 }, function (err) {
@@ -68,7 +68,7 @@ angular.module('openvillage')
                 });
         };
 
-        $scope.editScript = function (script) {
+        $scope.editScript = function (projectName, script) {
             if(script.code.length <= 1) {
                 SweetAlert.swal({
                     title: 'Error occurred',
@@ -78,7 +78,7 @@ angular.module('openvillage')
                 return;
             }
 
-            scriptsService.editScript(script)
+            scriptsService.editScript(projectName, script)
                 .then(function() {
                     SweetAlert.swal({
                         title: 'Script edited',

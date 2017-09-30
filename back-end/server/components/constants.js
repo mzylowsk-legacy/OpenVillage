@@ -36,7 +36,8 @@ module.exports = {
             Projects: 'projects',
             Tokens: 'tokens',
             Users: 'users',
-            Reports: 'reports'
+            Reports: 'reports',
+            Agenda: 'agenda'
         }
     }
 };

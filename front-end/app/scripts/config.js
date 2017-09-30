@@ -95,6 +95,20 @@ function config($stateProvider, $urlRouterProvider, $loginProvider) {
                 saveState: false
             }
         })
+        .state('index.projects.edit', {
+            url: '/{name}/edit',
+            views: {
+                '@index': {
+                    templateUrl: 'views/project_edit.html',
+                    controller: 'ProjectEditCtrl'
+                }
+            },
+            data: {
+                pageTitle: 'Edit project',
+                requireLogin: true,
+                saveState: false
+            }
+        })
         .state('index.projects.builds', {
             url: '/{name}/builds/:buildName',
             views: {
@@ -111,7 +125,7 @@ function config($stateProvider, $urlRouterProvider, $loginProvider) {
         })
         .state('index.projects.scripts', {
             url: '/{name}/scripts',
-            abstract: true,
+            abstract: true
         })
         .state('index.projects.scripts.new', {
             url: '/new',

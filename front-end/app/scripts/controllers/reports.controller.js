@@ -2,12 +2,21 @@
 
 angular.module('openvillage')
 
-    .controller('ReportsCtrl', function ($scope, reportsService, projectsService, buildsService, SweetAlert, $state) { 
+    .controller('ReportsCtrl', function ($scope, $window, usersService, reportsService, projectsService, buildsService, SweetAlert, $state) {
         $scope.periods = ['day', 'week', 'month', 'year'];
         $scope.format = 'yyyy/MM/dd';
         $scope.date = new Date();
         $scope.maxDate = Date.now();
         $scope.selection = [];
+
+        $scope.getCurrentUserEmail = function () {
+            usersService.getUserProfile($window.sessionStorage.sessionUsername)
+                .then(function (res) {
+                   $scope.email = res.email;
+                }, function (err) {
+                    console.log(err);
+                });
+        };
 
         $scope.toggleSelection = function toggleSelection(p) {
             var idx = $scope.selection.indexOf(p);
@@ -36,22 +45,24 @@ angular.module('openvillage')
           return $scope.projects.length;
         };
 
-        $scope.getLatestProjectsNumber = function() {
+        $scope.getLatestProjectsInfo = function() {
             var count = 0;
+            var info = '';
             angular.forEach($scope.projects, function(project) {
                 var creationDate = new Date(project.creationDate);
                 if (creationDate !== undefined && creationDate.getTime() > $scope.date.getTime()) {
                     count++;
+                    info += project.name + '; ';
                 }
             });
-            return count;
+            return count + ': ' + info;
         };
 
         $scope.sendReport = function(isValid) {
             if (isValid) {
                 var reportData = {
                     numOfAllProjects: $scope.getAllProjectsNumber(),
-                    numOfLatestProjects: $scope.getLatestProjectsNumber(),
+                    latestProjectsInfo: $scope.getLatestProjectsInfo(),
                     selectedDate: $scope.date,
                     selectedProjects: $scope.selection,
                     email: $scope.email
@@ -65,7 +76,7 @@ angular.module('openvillage')
                             type: 'success',
                             confirmButtonText: 'OK'
                         }, function() {
-                            $state.go('index');
+                            $state.go('index.reports');
                         });
 
                     }, function (err) {

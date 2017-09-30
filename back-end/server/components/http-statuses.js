@@ -29,6 +29,7 @@ var projects = {
     //success
     Created: {status: 201, group: 'Projects', ID: 'Created'},
     Removed: {status: 204, group: 'Projects', ID: 'Removed'},
+    Updated: {status: 200, group: 'Projects', ID: 'Updated'},
     //errors
     AlreadyExists: {status: 409, group: 'Projects', ID: 'AlreadyExists'},
     NotExists: {status: 404, group: 'Projects', ID: 'NotExists'}
@@ -48,7 +49,8 @@ var scripts = {
 var builds = {
     Triggered: {status: 202, group: 'Builds', ID: 'Triggered'},
     NotExists: {status: 404, group: 'Builds', ID: 'NotExists'},
-    Croned: {status: 200, group: 'Builds', ID: 'Created'}
+    Croned: {status: 200, group: 'Builds', ID: 'Created'},
+    Removed: {status: 204, group: 'Scripts', ID: 'Removed'}
 };
 
 module.exports = {

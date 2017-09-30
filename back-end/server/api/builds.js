@@ -2,10 +2,12 @@
 
 var projectsEntities = require('../entities/projects-entities'),
     buildsEntities = require('../entities/builds-entities'),
+    agendaEntities = require('../entities/agenda-entities'),
     httpStatuses = require('../components/http-statuses'),
     constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
     utils = require('../lib/utils/others'),
+    securityTools = require('../lib/utils/security-tools'),
     config = require('../config/config'),
     path = require('path'),
     Q = require('q'),
@@ -29,7 +31,7 @@ var runBuild = function (buildEntity, owner) {
                     var buildName = project.name + '-' + Date.now();
                     var githubClient = project.isPrivate ? new GitHub({
                         username: project.username,
-                        password: project.password
+                        password: securityTools.decrypt(project.password)
                     }) : new GitHub();
                     const repo = githubClient.repo(project.url.replace('https://github.com/', ''));
                     const branch = repo.branch(buildEntity.projectVersion);
@@ -49,7 +51,7 @@ var runBuild = function (buildEntity, owner) {
 
                         if (project.isPrivate && project.username && project.password) {
                             addComandArg('--username', project.username, args);
-                            addComandArg('--password', project.password, args);
+                            addComandArg('--password', securityTools.decrypt(project.password), args);
                         }
                         addComandArg('--commitSHA', infos.commit.sha, args);
 
@@ -59,7 +61,7 @@ var runBuild = function (buildEntity, owner) {
                                 if (buildEntity.steps[i].public) {
                                     scriptPath = path.join(constants.builder.commonScriptsPath, buildEntity.steps[i].scriptName + '.sh');
                                 } else {
-                                    scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', buildEntity.steps[i].scriptName + '.sh');
+                                    scriptPath = path.join(config.builder.workspace.path, owner, 'scripts', project.name, buildEntity.steps[i].scriptName + '.sh');
                                 }
                                 if (buildEntity.steps[i].args) {
                                     addComandArg('--build-steps', '"bash ' + scriptPath + ' ' + buildEntity.steps[i].args + '"', args);
@@ -165,27 +167,50 @@ var buildCronString = function (days, time) {
 };
 
 var setCronJob = function (buildEntity, owner) {
+    return Q.Promise(function (resolve) {
+        var agenda = new Agenda({db: {address: config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.databaseName,
+            collection: 'agenda'}, options: {ssl: true}}),
+            cronName = 'cron-' + Date.now(),
+            job;
+
+        buildEntity.owner = owner;
+
+        agenda.define(cronName, function (job) {
+            runBuild(job.attrs.data, owner);
+            logger.debug('Job with build fired: ' + job);
+        });
+
+        agenda.on('ready', function () {
+            job = agenda.create(cronName, buildEntity);
+            job.repeatEvery(buildCronString(buildEntity.days, new Date(buildEntity.time)));
+            job.save();
+            agenda.start();
+        });
+
+        resolve(httpStatuses.Builds.Croned);
+    });
+};
+
+var getCronJobs = function (projectName, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
-            .then(function (project) {
-                var agenda = new Agenda({db: {address: config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.databaseName,
-                    collection: 'agenda'}, options: {ssl: true}}),
-                    cronName = 'cron-' + Date.now(),
-                    job;
+        agendaEntities.getAgendaCrons(projectName, owner, true)
+            .then(function (crons) {
+                logger.debug('Agenda crons for project %s fetched from the database.', projectName);
+                resolve(crons);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
+    });
+};
 
-                agenda.define(cronName, function (job) {
-                    runBuild(job.attrs.data, owner);
-                    logger.debug('Job with build fired: ' + job + 'for project ' + project.name);
-                });
-
-                agenda.on('ready', function () {
-                    job = agenda.create(cronName, buildEntity);
-                    job.repeatEvery(buildCronString(buildEntity.days, new Date(buildEntity.time)));
-                    job.save();
-                    agenda.start();
-                });
-
-                resolve(httpStatuses.Builds.Croned);
+var deleteCronJob = function (cronName, owner) {
+    return Q.Promise(function (resolve, reject) {
+        agendaEntities.deleteAgendaCrons(cronName, owner, true)
+            .then(function (crons) {
+                logger.debug('Agenda cron for project %s has been deleted.', cronName);
+                resolve(httpStatuses.Builds.Removed);
             })
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
@@ -261,5 +286,7 @@ module.exports = {
     getBuildsByProjectName: getBuildsByProjectName,
     getBuildsByProjectsName: getBuildsByProjectsName,
     getZipPackage: getZipPackage,
+    getCronJobs: getCronJobs,
+    deleteCronJob: deleteCronJob,
     getDiff: getDiff
 };

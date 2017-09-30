@@ -1,11 +1,11 @@
 'use strict';
 
 var projectsEntities = require('../entities/projects-entities'),
-    branchesEntities = require('../entities/branches-entities'),
+    branchesManager = require('../api/branches'),
     httpStatuses = require('../components/http-statuses'),
-    constants = require('../components/constants'),
     logger = require('../lib/logger/logger').init(),
     utils = require('../lib/utils/others'),
+    securityTools = require('../lib/utils/security-tools'),
     Q = require('q');
 
 var addNewProject = function (projectEntity, owner) {
@@ -48,7 +48,7 @@ var deleteProject = function (name, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
@@ -62,28 +62,29 @@ var getProjects = function (owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 };
 
-var getProject = function (name, owner) {
+var getProjectWithBranches = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(name, owner, true)
+        projectsEntities.findProjectByNameAndOwner(name, owner, false)
             .then(function (project) {
                 if (project) {
                     logger.debug('Project for ' + owner + ' found.');
-                    branchesEntities.findAllBranchesForProject(project)
+                    branchesManager.findAllBranchesForProject(project)
                         .then(function(project)
                         {
                             logger.debug('Branches for ' + name + ' found.');
-                            project.password = 0;
                             resolve(project);
                         })
                         .catch(function(err)
                         {
-                            logger.error('Error: ' + utils.translateError(err));
-                            reject(err);
-                        })
+                            logger.error('Error during fetching branches: ' + utils.translateError(err));
+                            project.versions = [{name: 'master'}];
+                            project.branchError = true;
+                            reject(project);
+                        });
                 } else {
                     utils.throwError(httpStatuses.Projects.NotExists);
                 }
@@ -91,7 +92,51 @@ var getProject = function (name, owner) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
+            });
+    });
+};
+
+var getProject = function (name, owner) {
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.findProjectByNameAndOwner(name, owner, false)
+            .then(function (project) {
+                if (project) {
+                    logger.debug('Project for ' + owner + ' found.');
+                    resolve(project);
+                } else {
+                    utils.throwError(httpStatuses.Projects.NotExists);
+                }
             })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
+    });
+};
+
+var editProject = function (project, owner) {
+    var projectEntity = {
+        isPrivate: project.isPrivate,
+        url: project.url,
+        description: project.description
+    };
+    if (project.isPrivate) {
+        projectEntity.username = project.username;
+        projectEntity.password = securityTools.encrypt(project.password);
+    } else {
+        projectEntity.username = undefined;
+        projectEntity.password = undefined;
+    }
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.editProject(project.name, projectEntity, owner)
+            .then(function () {
+                logger.debug('Project ' + project.name + ' has been updated.');
+                resolve(httpStatuses.Projects.Updated);
+            })
+            .catch(function (err) {
+                logger.error('Error: ' + utils.translateError(err));
+                reject(err);
+            });
     });
 };
 
@@ -108,7 +153,7 @@ var setAsAutoScript = function (projectName, owner, scriptName) {
             .catch(function (err) {
                 logger.error('Error: ' + utils.translateError(err));
                 reject(err);
-            })
+            });
     });
 }
 
@@ -117,5 +162,7 @@ module.exports = {
     deleteProject: deleteProject,
     getProjects: getProjects,
     getProject: getProject,
+    getProjectWithBranches: getProjectWithBranches,
+    editProject: editProject,
     setAsAutoScript: setAsAutoScript
 };
