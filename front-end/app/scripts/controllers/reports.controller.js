@@ -8,6 +8,7 @@ angular.module('openvillage')
         $scope.date = new Date();
         $scope.maxDate = Date.now();
         $scope.selection = [];
+        $scope.ifCountProjectBeforeDate = false;
 
         $scope.getCurrentUserEmail = function () {
             usersService.getUserProfile($window.sessionStorage.sessionUsername)
@@ -55,6 +56,9 @@ angular.module('openvillage')
                     info += project.name + '; ';
                 }
             });
+            if (count === 0) {
+                info = 'no projects added';
+            }
             return count + ': ' + info;
         };
 
@@ -63,6 +67,7 @@ angular.module('openvillage')
                 var reportData = {
                     numOfAllProjects: $scope.getAllProjectsNumber(),
                     latestProjectsInfo: $scope.getLatestProjectsInfo(),
+                    ifCountProjectBeforeDate: $scope.ifCountProjectBeforeDate,
                     selectedDate: $scope.date,
                     selectedProjects: $scope.selection,
                     email: $scope.email
