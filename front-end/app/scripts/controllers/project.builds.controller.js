@@ -2,7 +2,7 @@
 
 angular.module('openvillage')
     .controller('ProjectBuildsCtrl', function ($scope, usersService, projectsService, scriptsService, buildsService,
-                                                $window, $stateParams, SweetAlert, $state, DTOptionsBuilder,
+                                                $window, $stateParams, $location, $anchorScroll, SweetAlert, $state, DTOptionsBuilder,
                                                 DTColumnDefBuilder) {
 
         $scope.userName = $window.sessionStorage.sessionUsername;
@@ -41,6 +41,30 @@ angular.module('openvillage')
             buildsService.getBuildByName(buildName)
                 .then(function (res) {
                     $scope.buildDetails = res;
+                }, function (err) {
+                    SweetAlert.swal({
+                        title: 'Error occurred',
+                        type: 'error',
+                        text: JSON.stringify(err)
+                    });
+                });
+        };
+
+        $scope.getDiff = function(buildName) {
+            buildsService.getDiff(buildName)
+                .then(function (res) {
+                    $scope.diff = 'No code changes';
+
+                    if (res && (res.toString().length > 1)) {
+                        $scope.diff = res.toString();
+                    }
+
+                    $scope.showDiff = 1;
+
+                    $location.hash('codeChanges');
+                    $location.hash('codeChanges');
+                    $anchorScroll();
+
                 }, function (err) {
                     SweetAlert.swal({
                         title: 'Error occurred',

@@ -68,7 +68,7 @@ var getProjects = function (owner) {
 
 var getProjectWithBranches = function (name, owner) {
     return Q.Promise(function (resolve, reject) {
-        projectsEntities.findProjectByNameAndOwner(name, owner, false)
+        projectsEntities.findProjectByNameAndOwner(name, owner, true)
             .then(function (project) {
                 if (project) {
                     logger.debug('Project for ' + owner + ' found.');
@@ -76,6 +76,7 @@ var getProjectWithBranches = function (name, owner) {
                         .then(function(project)
                         {
                             logger.debug('Branches for ' + name + ' found.');
+                            project.password = null;
                             resolve(project);
                         })
                         .catch(function(err)

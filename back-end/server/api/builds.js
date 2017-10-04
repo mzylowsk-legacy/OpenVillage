@@ -12,6 +12,7 @@ var projectsEntities = require('../entities/projects-entities'),
     path = require('path'),
     Q = require('q'),
     GitHub = require('octocat'),
+    spawn = require('child_process').spawn,
     Agenda = require('agenda');
 
 
@@ -215,6 +216,64 @@ var deleteCronJob = function (cronName, owner) {
     });
 };
 
+var getDiff = function(buildEntity, owner){
+    return Q.Promise(function (resolve, reject) {
+        projectsEntities.findProjectByNameAndOwner(buildEntity.projectName, owner, true)
+            .then(function (project) {
+                if (project) {
+                    logger.debug('Project %s has been found', buildEntity.projectName);
+
+                    var buildName = buildEntity.buildName;
+
+                    var githubClient = project.isPrivate ? new GitHub({
+                        username: project.username,
+                        password: securityTools.decrypt(project.password)
+                    }) : new GitHub();
+                    const repo = githubClient.repo(project.url.replace('https://github.com/', ''));
+                    const branch = repo.branch(buildEntity.projectVersion);
+                    branch.info().then(function (infos) {
+                        logger.debug('%s Branch info fetched from repository', buildEntity.projectVersion);
+                        var args = [constants.builder.diffScriptPath];
+                        addComandArg('--build-name', buildName, args);
+                        addComandArg('--project-owner', project.owner, args);
+                        addComandArg('--project-name', project.name, args);
+                        addComandArg('--project-version', buildEntity.projectVersion, args);
+                        addComandArg('--github-url', project.url, args);
+                        addComandArg('--destination', path.join(config.builder.workspace.path, owner, 'builds'), args);
+
+                        if (project.isPrivate && project.username && project.password) {
+                            addComandArg('--username', project.username, args);
+                            addComandArg('--password', securityTools.decrypt(project.password), args);
+                        }
+                        addComandArg('--commitSHA', infos.commit.sha, args);
+
+                        var lastCommitSha = infos.commit.sha;
+
+                        getBuildsByProjectName(buildEntity.projectName, owner)
+                            .then(function (builds) {
+                                for (var i in builds) {
+                                    if ((builds[i].status_code === 0) && (builds[i].projectVersion === buildEntity.projectVersion)) {
+                                        lastCommitSha = builds[i].commit_sha;
+                                        break;
+                                    }
+                                }
+
+                                addComandArg('--lastCommitSHA', lastCommitSha, args);
+
+                                var response;
+                                var scriptExecution = spawn('python', args);
+                                scriptExecution.stdout.on('data', function(data){
+                                    response = data.toString();
+                                    logger.debug('Got diff between builds');
+                                    resolve(response);
+                                });
+                            });
+                    });
+                }
+            });
+    });
+};
+
 module.exports = {
     runBuild: runBuild,
     setCronJob: setCronJob,
@@ -223,5 +282,6 @@ module.exports = {
     getBuildsByProjectsName: getBuildsByProjectsName,
     getZipPackage: getZipPackage,
     getCronJobs: getCronJobs,
-    deleteCronJob: deleteCronJob
+    deleteCronJob: deleteCronJob,
+    getDiff: getDiff
 };

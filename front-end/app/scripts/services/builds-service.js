@@ -29,6 +29,18 @@ angular.module('openvillage')
             });
         };
 
+        this.getDiff = function (buildName) {
+            return $q(function (resolve, reject) {
+                $http.get(SERVER_URL + '/auth/api/builds/diff/' + buildName)
+                    .success(function (data) {
+                        resolve(data);
+                    })
+                    .error(function (err) {
+                        reject(err);
+                    });
+            });
+        };
+
         /*
         {
              "steps": [

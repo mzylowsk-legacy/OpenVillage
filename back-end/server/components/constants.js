@@ -27,6 +27,7 @@ module.exports = {
     },
     builder: {
         uberScriptPath: process.cwd() +'/server/lib/utils/scripts-tools/uber_script.py',
+        diffScriptPath: process.cwd() +'/server/lib/utils/scripts-tools/get_diff.py',
         commonScriptsPath: process.cwd() +'/server/assets/default_scripts'
     },
     mongodb: {

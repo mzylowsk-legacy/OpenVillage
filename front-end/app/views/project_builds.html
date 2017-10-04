@@ -60,6 +60,9 @@
                                 <td class="project-actions">
                                     <a class="btn btn-success btn-sm" ng-click="getBuildDetails(b.buildName)"><i class="fa fa-tasks"></i> Show</a>
                                 </td>
+                                <td>
+                                    <a class="btn btn-success btn-sm" ng-click="getDiff(b.buildName)">View code changes</a>
+                                </td>
                                 <td class="project-actions">
                                     <a class="btn btn-success btn-sm" ng-if="b.status_code == 0" ng-click="getZipPackage(b.commit_sha)"><i class="fa fa-file-archive-o"/> Download source code</a>
                                 </td>
@@ -109,6 +112,10 @@
                             </span>
                         </div>
                     </div>
+                </div>
+
+                <div>
+                    <div ng-show="showDiff" id="codeChanges"><pre>{{diff}}</pre></div>
                 </div>
 
             </div>
