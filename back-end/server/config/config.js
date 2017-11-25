@@ -20,7 +20,8 @@ module.exports.auth = {
 };
 
 module.exports.environment = {
-    host: '<protocol>:<address>:<port>'
+    host: '<protocol>:<address>:<port>',
+    apiHost: '<protocol>:<address>:<port>'
 };
 
 module.exports.mongodb = {

@@ -14,7 +14,7 @@ module.exports = {
                 subject: 'Account activation',
                 content: function(username, token) {
                     return 'Click on this link to activate your account: \n' +
-                        config.environment.host + '/api/users/' + username + '/activate/' + token;
+                        config.environment.apiHost + '/api/users/' + username + '/activate/' + token;
                 }
             }
         }
